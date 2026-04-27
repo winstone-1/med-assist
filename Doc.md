@@ -85,3 +85,44 @@ medassist/
     ├── test_matcher.py             # Unit tests for symptom matching
     └── test_routes.py              # Integration tests for Flask routes
 ```
+
+## 4. Development Roadmap (Checklist)
+
+### Day 1 – Today (Setup & Database)
+- [ ] Create Anaconda environment (`conda create -n medassist python=3.9`)
+- [ ] Install Flask, SQLAlchemy, Jinja2, WeasyPrint
+- [ ] Create project folder structure
+- [ ] Design SQLite database schema (models.py)
+- [ ] Create `seed.py` to populate initial symptoms, conditions, first aid guides
+- [ ] Test database connection in Jupyter notebook
+
+### Day 2 – Tomorrow (Backend Logic)
+- [ ] Build symptom matching decision tree (`symptom_matcher.py`)
+- [ ] Implement weighted scoring algorithm for condition matching
+- [ ] Create Flask routes for symptom questionnaire (GET/POST)
+- [ ] Set up session management for multi-step form
+- [ ] Test matching logic with sample inputs
+- [ ] Write unit tests for `test_matcher.py`
+
+### Day 3 – Wednesday (Templates & UI)
+- [ ] Create `base.html` with Bootstrap 5, navbar, footer, disclaimer
+- [ ] Build `symptom_form.html` with multi-step Jinja2 form
+- [ ] Create `results.html` to display matched conditions + severity colors
+- [ ] Build `firstaid_list.html` and `firstaid_detail.html`
+- [ ] Add client-side validation with JavaScript
+- [ ] Implement severity color coding (green/yellow/red)
+
+### Day 4 – Thursday (Final Features & Testing)
+- [ ] Implement PDF export functionality (WeasyPrint)
+- [ ] Create `emergency.html` with emergency contacts
+- [ ] Add search/filter for first aid guides
+- [ ] Run Jupyter notebooks for testing & analysis
+- [ ] Write integration tests for all routes
+- [ ] Final debugging and documentation cleanup
+- [ ] Prepare demo video / screenshots
+
+### Bonus (If Time Permits)
+- [ ] Add user authentication (login/signup)
+- [ ] Save symptom history per user
+- [ ] Integrate free API (OpenFDA drug lookup)
+- [ ] Add "email first aid guide" feature
