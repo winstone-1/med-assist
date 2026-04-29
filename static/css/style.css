@@ -1,0 +1,37 @@
+/* style.css */
+:root {
+  --teal:       #1A7A7A;
+  --teal-light: #E6F4F4;
+  --navy:       #0D2B4E;
+}
+
+.bg-teal          { background-color: var(--teal) !important; }
+.text-teal        { color: var(--teal) !important; }
+.btn-teal         { background-color: var(--teal); color: #fff; border: none; }
+.btn-teal:hover   { background-color: #145f5f; color: #fff; }
+.btn-outline-teal { border-color: var(--teal); color: var(--teal); }
+.btn-outline-teal:hover { background-color: var(--teal); color: #fff; }
+
+.disclaimer-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  font-size: 0.82rem;
+}
+
+/* Severity left border indicators */
+.severity-low       { border-left: 5px solid #16A34A !important; }
+.severity-moderate  { border-left: 5px solid #D97706 !important; }
+.severity-urgent    { border-left: 5px solid #EA580C !important; }
+.severity-emergency { border-left: 5px solid #DC2626 !important; }
+
+/* Card hover lift */
+.card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
+}
+
+/* Progress bar */
+.progress-bar.bg-teal { background-color: var(--teal) !important; }
