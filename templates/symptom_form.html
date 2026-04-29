@@ -11,7 +11,7 @@
     <!-- Progress bar -->
     <div class="progress mb-4" style="height: 8px;">
       <div class="progress-bar bg-teal"
-           style="width: {{ (step / total * 100) | round }}%">
+           style="width: {{ ((step / total * 100) if total > 0 else 0) | round }}%">
       </div>
     </div>
 
