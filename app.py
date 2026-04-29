@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 from models import db, Question, FirstAidGuide
 from symptom_matcher import match_symptoms, get_severity_label
 from api_client import get_drug_warnings
+from session_manager import (
+    init_session, save_answer, get_answers,
+    clear_session, get_session_token, set_current_step
+)
 
 load_dotenv()
 
@@ -39,12 +43,10 @@ def create_app():
         step      = int(request.args.get('step', 1))
 
         if request.method == 'POST':
-            # ── Save answers to session ──────────────────────────────────────
-            answers = session.get('answers', {})
+            # ── Save answers to session via session manager ──────────────────
             for key, value in request.form.items():
-                answers[key] = value
-            session['answers'] = answers
-            session.modified    = True
+                save_answer(key, value)
+            set_current_step(step + 1)
 
             if step < total:
                 return redirect(url_for('symptom_form', step=step + 1))
@@ -60,7 +62,7 @@ def create_app():
 
     @app.route('/results')
     def results():
-        answers    = session.get('answers', {})
+        answers    = get_answers()
         conditions = match_symptoms(answers)
 
         # ── Attach severity labels ───────────────────────────────────────────
@@ -81,8 +83,8 @@ def create_app():
         )
 
     @app.route('/clear')
-    def clear_session():
-        session.clear()
+    def clear():
+        clear_session()
         return redirect(url_for('symptom_form'))
 
     @app.route('/first-aid')
