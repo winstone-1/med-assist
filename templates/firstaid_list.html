@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}First Aid Guides — MedAssist{% endblock %}
+{% block content %}
+
+<h2 class="fw-bold text-teal mb-1">First Aid Library</h2>
+<p class="text-muted small mb-4">
+  Click any guide to view full steps and export as PDF.
+</p>
+
+<!-- Search box -->
+<input type="text" id="searchBox" class="form-control mb-4"
+       placeholder="Search guides...">
+
+<div class="row g-3" id="guideGrid">
+  {% for guide in guides %}
+  <div class="col-md-6 col-lg-4 guide-item">
+    <a href="{{ url_for('firstaid_detail', guide_id=guide.id) }}"
+       class="text-decoration-none">
+      <div class="card h-100 shadow-sm border-0 severity-{{ guide.severity }}">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="fw-bold text-dark mb-0">{{ guide.title }}</h6>
+            <span class="badge severity-badge ms-2 flex-shrink-0"
+                  data-severity="{{ guide.severity }}">
+              {{ guide.severity | upper }}
+            </span>
+          </div>
+          <p class="text-muted small mb-1">
+            Category: {{ guide.category | title }}
+          </p>
+          <p class="text-muted small mb-0">
+            {{ guide.steps | length }} steps
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% else %}
+  <p class="text-muted">
+    No guides found. Run <code>python seed.py</code> to populate the database.
+  </p>
+  {% endfor %}
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+  document.getElementById('searchBox').addEventListener('input', function () {
+    const query = this.value.toLowerCase();
+    document.querySelectorAll('.guide-item').forEach(item => {
+      item.style.display = item.innerText.toLowerCase().includes(query) ? '' : 'none';
+    });
+  });
+</script>
+{% endblock %}

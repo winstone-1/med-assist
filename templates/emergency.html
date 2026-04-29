@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Emergency Contacts — MedAssist{% endblock %}
+{% block content %}
+
+<div class="alert alert-danger text-center fw-bold fs-5">
+  🚨 If this is a life-threatening emergency, call emergency services immediately.
+</div>
+
+<h2 class="fw-bold text-teal mb-4">Emergency Contacts</h2>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card border-danger shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="fw-bold text-danger">🇰🇪 Kenya Emergency Numbers</h5>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2"><strong>Emergency:</strong>
+            <span class="fs-5 text-danger">999 / 112</span>
+          </li>
+          <li class="mb-2"><strong>Nairobi Ambulance:</strong> 020 725 0000</li>
+          <li class="mb-2"><strong>Kenya Red Cross:</strong> 1199</li>
+          <li class="mb-2"><strong>Poison Control:</strong> 0800 723 253</li>
+          <li class="mb-2"><strong>Police:</strong> 999 / 112</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card border-warning shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="fw-bold text-warning">When to Call Emergency Services</h5>
+        <ul class="small text-muted mb-0">
+          <li class="mb-1">Chest pain or difficulty breathing</li>
+          <li class="mb-1">Unconsciousness or unresponsiveness</li>
+          <li class="mb-1">Severe bleeding that won't stop</li>
+          <li class="mb-1">Signs of stroke — Face drooping, Arm weakness, Speech difficulty</li>
+          <li class="mb-1">Severe allergic reaction (anaphylaxis)</li>
+          <li class="mb-1">Suspected poisoning or overdose</li>
+          <li class="mb-1">Serious burns or fractures</li>
+          <li class="mb-1">Choking with complete airway blockage</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4">
+  <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">← Home</a>
+  <a href="{{ url_for('symptom_form') }}" class="btn btn-teal ms-2">Check Symptoms</a>
+</div>
+
+{% endblock %}

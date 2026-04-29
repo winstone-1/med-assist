@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}{{ guide.title }} — MedAssist{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <a href="{{ url_for('firstaid_list') }}" class="text-muted small">← Back to Guides</a>
+    <h2 class="fw-bold text-teal mt-1 mb-0">{{ guide.title }}</h2>
+    <span class="badge severity-badge mt-1" data-severity="{{ guide.severity }}">
+      {{ guide.severity | upper }}
+    </span>
+  </div>
+</div>
+
+{% if guide.warnings %}
+<div class="alert alert-warning">
+  <strong>⚠ Warning:</strong> {{ guide.warnings }}
+</div>
+{% endif %}
+
+<div class="card shadow-sm border-0 p-4 mb-4">
+  <h5 class="fw-bold mb-3">Steps</h5>
+  <ol class="mb-0">
+    {% for step in guide.steps %}
+    <li class="mb-2">{{ step }}</li>
+    {% endfor %}
+  </ol>
+</div>
+
+<div class="p-3 bg-light rounded small text-muted mb-4">
+  ⚠ This guide is for educational reference only. Always seek
+  professional medical attention as soon as possible.
+</div>
+
+<a href="{{ url_for('firstaid_list') }}" class="btn btn-outline-secondary">← Back</a>
+<a href="{{ url_for('symptom_form') }}" class="btn btn-teal ms-2">Check Symptoms</a>
+
+{% endblock %}

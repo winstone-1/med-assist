@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block title %}Your Results — MedAssist{% endblock %}
+{% block content %}
+
+<h2 class="fw-bold text-teal mb-1">Possible Conditions</h2>
+<p class="text-muted small mb-4">
+  Based on your symptoms. This is not a diagnosis —
+  always consult a healthcare professional.
+</p>
+
+{% if has_emergency %}
+<div class="alert alert-danger fw-bold text-center fs-5">
+  🚨 One or more results suggest a potential emergency.
+  <strong>Call emergency services (999 / 112) immediately.</strong>
+</div>
+{% endif %}
+
+{% if conditions %}
+  {% for item in conditions %}
+  <div class="card mb-3 shadow-sm border-0 severity-{{ item.severity }}">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center">
+      <strong class="fs-5">{{ item.condition.name }}</strong>
+      <span class="badge severity-badge rounded-pill px-3 py-2"
+            data-severity="{{ item.severity }}">
+        {{ item.severity | upper }}
+      </span>
+    </div>
+    <div class="card-body">
+      <p class="mb-2">{{ item.condition.description }}</p>
+
+      {% if item.condition.when_to_see_doctor %}
+      <p class="text-muted small mb-2">
+        <strong>When to see a doctor:</strong>
+        {{ item.condition.when_to_see_doctor }}
+      </p>
+      {% endif %}
+
+      <p class="text-muted small mb-3">
+        Match score: <strong>{{ (item.final_score * 100) | round | int }}%</strong>
+        &nbsp;|&nbsp;
+        Matched symptoms: {{ item.matched | join(', ') }}
+      </p>
+
+      <!-- OpenFDA Drug Warnings -->
+      {% if item.drug_warnings %}
+      <div class="mt-2">
+        <p class="fw-semibold small mb-1">💊 Related Medications (OpenFDA):</p>
+        {% for drug in item.drug_warnings %}
+        <div class="bg-light rounded p-2 mb-1 small">
+          <strong>{{ drug.brand_name }}</strong> —
+          {{ drug.warnings[:150] }}...
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {% if item.guide %}
+      <a href="{{ url_for('firstaid_detail', guide_id=item.guide.id) }}"
+         class="btn btn-sm btn-outline-teal mt-2">
+        📄 View First Aid Guide
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+
+{% else %}
+<div class="alert alert-info">
+  No conditions matched your symptoms. If you are concerned,
+  please consult a healthcare professional.
+</div>
+{% endif %}
+
+<div class="mt-4">
+  <a href="{{ url_for('clear') }}" class="btn btn-outline-secondary">↩ Start Over</a>
+  <a href="{{ url_for('firstaid_list') }}" class="btn btn-teal ms-2">Browse First Aid Guides</a>
+</div>
+
+{% endblock %}
