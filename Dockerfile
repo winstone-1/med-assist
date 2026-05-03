@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
 # Upgrade pip
 RUN pip install --upgrade pip
 
-# Copy requirements first for better caching
+# Copy requirements first
 COPY requirements.txt .
 
 # Install Python dependencies
@@ -22,7 +22,7 @@ COPY . .
 # Create instance directory for database
 RUN mkdir -p instance
 
-# Run seed - this will work now
+# Run seed to populate database
 RUN python seed.py
 
 EXPOSE 5000

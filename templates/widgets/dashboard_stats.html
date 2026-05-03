@@ -1,0 +1,63 @@
+<div class="dashboard-stats">
+  <div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+      <div class="stat-card-modern" data-count="0">
+        <div class="stat-icon">
+          <i class="fa-solid fa-stethoscope"></i>
+        </div>
+        <div class="stat-number counter" data-target="{{ symptom_checks }}">0</div>
+        <div class="stat-label">Symptom Checks</div>
+        <div class="stat-trend positive">
+          <i class="fa-solid fa-arrow-up"></i> +12%
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card-modern">
+        <div class="stat-icon">
+          <i class="fa-solid fa-pills"></i>
+        </div>
+        <div class="stat-number counter" data-target="{{ medications_count }}">0</div>
+        <div class="stat-label">Medications</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card-modern">
+        <div class="stat-icon">
+          <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <div class="stat-number counter" data-target="{{ appointments_count }}">0</div>
+        <div class="stat-label">Appointments</div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6">
+      <div class="stat-card-modern">
+        <div class="stat-icon">
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div class="stat-number counter" data-target="{{ journal_entries }}">0</div>
+        <div class="stat-label">Journal Entries</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Counter animation
+  const counters = document.querySelectorAll('.counter');
+  counters.forEach(counter => {
+    const target = parseInt(counter.getAttribute('data-target'));
+    let current = 0;
+    const increment = target / 30;
+    const updateCounter = () => {
+      if (current < target) {
+        current += increment;
+        counter.textContent = Math.ceil(current);
+        setTimeout(updateCounter, 30);
+      } else {
+        counter.textContent = target;
+      }
+    };
+    updateCounter();
+  });
+</script>
