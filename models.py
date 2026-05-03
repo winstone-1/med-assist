@@ -1,16 +1,53 @@
 # models.py
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin
 from datetime import datetime
 import json
 
 db = SQLAlchemy()
 
-# ── Association table (many-to-many: Symptom <-> Condition) ──────────────────
+# ── Association table ─────────────────────────────────────────────────────────
 symptom_condition = db.Table(
     'symptom_condition',
     db.Column('symptom_id',   db.Integer, db.ForeignKey('symptom.id'),   primary_key=True),
     db.Column('condition_id', db.Integer, db.ForeignKey('condition.id'), primary_key=True),
 )
+
+
+class User(db.Model, UserMixin):
+    __tablename__ = 'user'
+
+    id         = db.Column(db.Integer, primary_key=True)
+    username   = db.Column(db.String(80),  unique=True, nullable=False)
+    email      = db.Column(db.String(120), unique=True, nullable=False)
+    password   = db.Column(db.String(200), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    history = db.relationship('SymptomHistory', backref='user', lazy=True)
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+
+class SymptomHistory(db.Model):
+    __tablename__ = 'symptom_history'
+
+    id           = db.Column(db.Integer, primary_key=True)
+    user_id      = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    answers_json = db.Column(db.Text)
+    results_json = db.Column(db.Text)
+    created_at   = db.Column(db.DateTime, default=datetime.utcnow)
+
+    @property
+    def answers(self):
+        return json.loads(self.answers_json) if self.answers_json else {}
+
+    @property
+    def results(self):
+        return json.loads(self.results_json) if self.results_json else []
+
+    def __repr__(self):
+        return f'<SymptomHistory user={self.user_id}>'
 
 
 class Symptom(db.Model):
