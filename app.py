@@ -379,6 +379,35 @@ def create_app():
             flash('Reading deleted.', 'success')
         return redirect(url_for('bp_tracker'))
 
+@app.route('/google-login', methods=['POST'])
+def google_login():
+    from models import User
+    import json
+    
+    data = request.get_json()
+    email = data.get('email')
+    name = data.get('name')
+    google_id = data.get('google_id')
+    
+    # Check if user exists
+    user = User.query.filter_by(email=email).first()
+    
+    if not user:
+        # Create new user
+        username = name.replace(' ', '').lower() + str(int(datetime.now().timestamp()))[-4:]
+        user = User(
+            username=username,
+            email=email,
+            password=bcrypt.generate_password_hash(google_id).decode('utf-8')
+        )
+        db.session.add(user)
+        db.session.commit()
+        flash('Account created with Google!', 'success')
+    
+    # Log the user in
+    login_user(user)
+    return json.dumps({'success': True})
+
     @app.route('/wellness')
     def wellness():
         category = request.args.get('category')

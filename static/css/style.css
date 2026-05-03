@@ -712,3 +712,168 @@ footer .text-muted {
   color: #cbd5e1 !important;
   opacity: 1 !important;
 }
+/* Accessibility Collapsible Menu */
+.accessibility-wrapper {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 1000;
+}
+
+.accessibility-toggle-btn {
+  background: var(--teal);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.accessibility-toggle-btn:hover {
+  background: var(--teal-dark);
+  transform: scale(1.05);
+}
+
+.accessibility-toggle-btn .toggle-icon {
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+}
+
+.accessibility-menu {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-xl);
+  padding: 0;
+  width: auto;
+  min-width: 280px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+}
+
+.accessibility-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.accessibility-inner {
+  padding: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.accessibility-btn {
+  background: var(--gray-100);
+  border: 1px solid var(--gray-200);
+  border-radius: 40px;
+  padding: 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--gray-800);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.accessibility-btn:hover {
+  background: var(--teal-light);
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+/* Dark theme support for accessibility menu */
+[data-theme="dark"] .accessibility-menu {
+  background: #2a2a3e;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .accessibility-btn {
+  background: #3a3a4e;
+  border-color: #4a4a5e;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .accessibility-btn:hover {
+  background: var(--teal-dark);
+  border-color: var(--teal);
+}
+
+/* Skip to main content (Accessibility) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--teal);
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 1001;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Responsive accessibility menu */
+@media (max-width: 768px) {
+  .accessibility-wrapper {
+    bottom: 10px;
+    left: 10px;
+  }
+  
+  .accessibility-toggle-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+  
+  .accessibility-toggle-btn .toggle-text {
+    display: inline;
+  }
+  
+  .accessibility-menu {
+    bottom: 55px;
+    min-width: 240px;
+  }
+  
+  .accessibility-btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .accessibility-toggle-btn .toggle-text {
+    display: none;
+  }
+  
+  .accessibility-toggle-btn {
+    padding: 10px 14px;
+  }
+  
+  .accessibility-menu {
+    min-width: 200px;
+  }
+  
+  .accessibility-btn {
+    padding: 5px 8px;
+    font-size: 0.65rem;
+  }
+}

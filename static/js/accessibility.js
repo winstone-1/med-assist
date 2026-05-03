@@ -94,4 +94,33 @@ highContrastStyle.textContent = `
         color: white !important;
     }
 `;
+// Reset all accessibility settings
+const resetBtn = document.getElementById('reset-accessibility');
+
+if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+        // Reset font size
+        currentFontSize = 100;
+        document.body.style.fontSize = '100%';
+        localStorage.setItem('fontSize', currentFontSize);
+        
+        // Reset dark mode
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+        const darkToggleIcon = document.getElementById('dark-toggle');
+        if (darkToggleIcon) darkToggleIcon.innerHTML = '<i class="fa-solid fa-moon"></i> Dark';
+        
+        // Reset high contrast
+        document.body.classList.remove('high-contrast');
+        localStorage.setItem('highContrast', 'false');
+        const highContrastBtn = document.getElementById('high-contrast');
+        if (highContrastBtn) {
+            highContrastBtn.style.backgroundColor = '';
+            highContrastBtn.style.color = '';
+        }
+        
+        // Show success message
+        alert('All accessibility settings have been reset to default.');
+    });
+}
 document.head.appendChild(highContrastStyle);

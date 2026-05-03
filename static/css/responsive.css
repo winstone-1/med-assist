@@ -1,0 +1,266 @@
+/* Responsive Design for Mobile, Tablet, iPad */
+
+/* Container padding for all devices */
+.container {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Mobile First - Base styles */
+@media (max-width: 768px) {
+  /* Navbar adjustments */
+  .navbar-brand {
+    font-size: 1.2rem;
+  }
+  
+  .navbar-nav {
+    padding: 0.5rem 0;
+  }
+  
+  .nav-item {
+    margin: 0.25rem 0;
+  }
+  
+  .signup-btn {
+    margin-top: 0.5rem;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Dropdown menus on mobile */
+  .dropdown-menu {
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-left: 1rem;
+  }
+  
+  /* Hero section */
+  .hero-section-modern,
+  .hero-section {
+    padding: 2rem 1rem;
+    border-radius: 20px;
+  }
+  
+  .hero-section-modern h1,
+  .hero-section h1 {
+    font-size: 1.8rem;
+  }
+  
+  .lead {
+    font-size: 1rem;
+  }
+  
+  /* Buttons */
+  .btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .btn-teal, .btn-outline-teal {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+  
+  .d-flex.gap-3 {
+    flex-direction: column;
+    gap: 0.5rem !important;
+  }
+  
+  /* Cards */
+  .card {
+    margin-bottom: 1rem;
+  }
+  
+  .feature-card-modern {
+    padding: 1.5rem;
+  }
+  
+  .feature-icon-lg {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .feature-icon-lg i {
+    font-size: 1.5rem;
+  }
+  
+  /* Stats section */
+  .stat-card-modern {
+    padding: 1rem;
+  }
+  
+  .stat-number {
+    font-size: 1.8rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+  
+  /* Forms */
+  .auth-card {
+    margin: 1rem;
+    max-width: calc(100% - 2rem);
+  }
+  
+  .form-control, .form-select {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+  }
+  
+  /* Footer */
+  footer {
+    text-align: center;
+  }
+  
+  footer .col-lg-2, 
+  footer .col-md-4 {
+    margin-bottom: 1.5rem;
+  }
+  
+  footer h6 {
+    margin-bottom: 0.75rem;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+  
+  /* Progress bar */
+  .progress {
+    height: 6px;
+  }
+  
+  /* Step indicator */
+  .step-indicator {
+    gap: 6px;
+  }
+  
+  .step-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  /* Severity badges */
+  .severity-badge {
+    font-size: 0.6rem;
+    padding: 3px 8px !important;
+  }
+  
+  /* Tables */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  
+  /* Modal */
+  .modal-dialog {
+    margin: 1rem;
+  }
+  
+  /* Back to top button */
+  .back-to-top {
+    bottom: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* iPad / Tablet (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 95%;
+  }
+  
+  .hero-section-modern h1,
+  .hero-section h1 {
+    font-size: 2.2rem;
+  }
+  
+  .feature-card-modern {
+    padding: 1.5rem;
+  }
+  
+  .stat-number {
+    font-size: 2rem;
+  }
+  
+  .navbar-nav {
+    flex-wrap: wrap;
+  }
+  
+  .nav-item {
+    margin: 0.25rem 0;
+  }
+  
+  .d-flex.gap-3 {
+    flex-wrap: wrap;
+  }
+  
+  .btn-lg {
+    padding: 0.6rem 1.2rem;
+  }
+  
+  footer .row > div {
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* Large screens (Desktop) */
+@media (min-width: 1025px) {
+  .container {
+    max-width: 1200px;
+  }
+  
+  .hero-section-modern h1,
+  .hero-section h1 {
+    font-size: 3rem;
+  }
+}
+
+/* Landscape mode for mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section-modern,
+  .hero-section {
+    padding: 1.5rem;
+  }
+  
+  .navbar-collapse {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+}
+
+/* Small mobile devices (below 380px) */
+@media (max-width: 380px) {
+  .navbar-brand {
+    font-size: 1rem;
+  }
+  
+  .hero-section-modern h1,
+  .hero-section h1 {
+    font-size: 1.4rem;
+  }
+  
+  .stat-number {
+    font-size: 1.4rem;
+  }
+  
+  .feature-card-modern h5 {
+    font-size: 1rem;
+  }
+  
+  .feature-card-modern p {
+    font-size: 0.8rem;
+  }
+  
+  .btn-teal, .btn-outline-teal {
+    font-size: 0.8rem;
+  }
+  
+  .severity-badge {
+    font-size: 0.55rem;
+  }
+}
