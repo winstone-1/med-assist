@@ -10,14 +10,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Create instance directory
 RUN mkdir -p instance
 
-# Run seed (it will check if data exists and skip if already there)
-RUN python seed.py
+# DO NOT run seed here
+# RUN python seed.py
 
-# Expose port
 EXPOSE 5000
 
-# Start the web server - THIS IS THE IMPORTANT PART
-CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
+# Start gunicorn only - seed will run in app if needed
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--timeout", "120"]
