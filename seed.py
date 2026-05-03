@@ -1,3 +1,12 @@
+# Add this at the beginning of seed() function
+def seed():
+    with app.app_context():
+        # Skip if already seeded
+        if Symptom.query.count() > 0:
+            print("✅ Database already seeded. Skipping.")
+            return
+        
+        # Your existing seeding code below...
 # seed.py
 import json
 import os
