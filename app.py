@@ -33,12 +33,12 @@ def load_user(user_id):
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
 
-    # ── Config ───────────────────────────────────────────────────────────────
+    # Config
     app.config['SECRET_KEY']                     = os.getenv('SECRET_KEY', 'dev-secret-key')
     app.config['SQLALCHEMY_DATABASE_URI']        = os.getenv('DATABASE_URI', 'sqlite:///medassist.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # ── Extensions ───────────────────────────────────────────────────────────
+    # Extensions
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
@@ -49,8 +49,7 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    # ── Auth Routes ───────────────────────────────────────────────────────────
-
+    # Auth Routes
     @app.route('/register', methods=['GET', 'POST'])
     def register():
         if current_user.is_authenticated:
@@ -134,8 +133,7 @@ def create_app():
         flash('Record deleted.', 'success')
         return redirect(url_for('dashboard'))
 
-    # ── Main Routes ───────────────────────────────────────────────────────────
-
+    # Main Routes
     @app.route('/')
     def index():
         return render_template('index.html')
@@ -259,7 +257,10 @@ def create_app():
     return app
 
 
+# Create app instance for Render
 app = create_app()
 
+# Run only when executed directly (not on Render)
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=True)
