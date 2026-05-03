@@ -141,8 +141,13 @@ class UserSession(db.Model):
 
     def __repr__(self):
         return f'<UserSession {self.session_token[:8]}...>'
-    
-    class MedicationReminder(db.Model):
+
+
+# ── New Models for Health Tools ────────────────────────────────────────────────
+
+class MedicationReminder(db.Model):
+    __tablename__ = 'medication_reminder'
+
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     med_name = db.Column(db.String(200), nullable=False)
@@ -153,3 +158,60 @@ class UserSession(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     user = db.relationship('User', backref='medications')
+
+
+class HealthJournal(db.Model):
+    __tablename__ = 'health_journal'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    entry_date = db.Column(db.Date, nullable=False)
+    mood = db.Column(db.Integer)
+    symptoms = db.Column(db.String(500))
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='journal_entries')
+
+
+class Appointment(db.Model):
+    __tablename__ = 'appointment'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    doctor_name = db.Column(db.String(200), nullable=False)
+    specialty = db.Column(db.String(100))
+    appointment_date = db.Column(db.Date, nullable=False)
+    appointment_time = db.Column(db.String(50))
+    location = db.Column(db.String(500))
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='appointments')
+
+
+class BloodPressure(db.Model):
+    __tablename__ = 'blood_pressure'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    systolic = db.Column(db.Integer, nullable=False)
+    diastolic = db.Column(db.Integer, nullable=False)
+    pulse = db.Column(db.Integer)
+    reading_date = db.Column(db.Date, nullable=False)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    user = db.relationship('User', backref='bp_readings')
+
+
+class WellnessTip(db.Model):
+    __tablename__ = 'wellness_tip'
+
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    category = db.Column(db.String(100))
+    content = db.Column(db.Text, nullable=False)
+    source = db.Column(db.String(200))
+    view_count = db.Column(db.Integer, default=0)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
