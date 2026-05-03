@@ -5,9 +5,9 @@
 <div class="auth-card card shadow">
   <div class="card-header text-center text-white">
     <h4 class="mb-0 fw-bold">
-      <i class="bi bi-person-plus me-2"></i>Create Account
+      <i class="fa-solid fa-user-plus me-2"></i>Create Account
     </h4>
-    <p class="mb-0 small opacity-75 mt-1">Join MedAssist today — it's free</p>
+    <p class="mb-0 small opacity-75 mt-1">Join MedAssist today</p>
   </div>
   <div class="card-body p-4">
     <form method="POST">
@@ -15,7 +15,7 @@
         <label class="form-label fw-semibold small">Username</label>
         <div class="input-group">
           <span class="input-group-text bg-light border-end-0">
-            <i class="bi bi-person text-muted"></i>
+            <i class="fa-solid fa-user text-muted"></i>
           </span>
           <input type="text" name="username" class="form-control border-start-0"
                  placeholder="johndoe" required>
@@ -25,7 +25,7 @@
         <label class="form-label fw-semibold small">Email Address</label>
         <div class="input-group">
           <span class="input-group-text bg-light border-end-0">
-            <i class="bi bi-envelope text-muted"></i>
+            <i class="fa-solid fa-envelope text-muted"></i>
           </span>
           <input type="email" name="email" class="form-control border-start-0"
                  placeholder="you@example.com" required>
@@ -35,7 +35,7 @@
         <label class="form-label fw-semibold small">Password</label>
         <div class="input-group">
           <span class="input-group-text bg-light border-end-0">
-            <i class="bi bi-lock text-muted"></i>
+            <i class="fa-solid fa-lock text-muted"></i>
           </span>
           <input type="password" name="password" class="form-control border-start-0"
                  placeholder="••••••••" required>
@@ -45,23 +45,78 @@
         <label class="form-label fw-semibold small">Confirm Password</label>
         <div class="input-group">
           <span class="input-group-text bg-light border-end-0">
-            <i class="bi bi-lock-fill text-muted"></i>
+            <i class="fa-solid fa-lock text-muted"></i>
           </span>
-          <input type="password" name="confirm_password"
-                 class="form-control border-start-0"
+          <input type="password" name="confirm_password" class="form-control border-start-0"
                  placeholder="••••••••" required>
         </div>
       </div>
+      <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="termsCheck" required>
+        <label class="form-check-label small" for="termsCheck">
+          I agree to the <a href="#" class="text-teal">Terms of Service</a> and 
+          <a href="#" class="text-teal">Privacy Policy</a>
+        </label>
+      </div>
       <button type="submit" class="btn btn-teal w-100 py-2 fw-semibold">
-        <i class="bi bi-person-plus me-2"></i>Create Account
+        <i class="fa-solid fa-user-plus me-2"></i>Sign Up
       </button>
     </form>
+
+    <div class="position-relative my-4">
+      <hr>
+      <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">OR</span>
+    </div>
+
+    <button onclick="signInWithGoogle()" class="btn btn-outline-danger w-100 py-2">
+      <i class="fa-brands fa-google me-2"></i>Sign up with Google
+    </button>
+
     <hr class="my-3">
     <p class="text-center text-muted small mb-0">
       Already have an account?
-      <a href="{{ url_for('login') }}" class="text-teal fw-semibold">Sign in</a>
+      <a href="{{ url_for('login') }}" class="text-teal fw-semibold text-decoration-none">Sign in</a>
     </p>
   </div>
 </div>
+
+<!-- Firebase Google Sign-In Script -->
+<script type="text/javascript">
+  window.signInWithGoogle = function() {
+    if (typeof firebase === 'undefined') {
+      console.error('Firebase not loaded');
+      alert('Google Sign-In is coming soon! Please use email registration for demo.');
+      return;
+    }
+    
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider)
+      .then((result) => {
+        // Send to backend to create/login user
+        fetch('/google-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: result.user.email,
+            name: result.user.displayName,
+            google_id: result.user.uid,
+            photo_url: result.user.photoURL || ''
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = '/';
+          } else {
+            alert('Registration failed. Please try again.');
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Google Sign-In Error:', error);
+        alert('Google Sign-In failed: ' + error.message);
+      });
+  };
+</script>
 
 {% endblock %}
