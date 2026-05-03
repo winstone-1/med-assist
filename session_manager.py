@@ -6,9 +6,9 @@ import uuid
 def init_session():
     """Initialise a fresh session for a new symptom check."""
     session.clear()
-    session['answers']       = {}
+    session['answers'] = {}
     session['session_token'] = str(uuid.uuid4())
-    session.modified          = True
+    session.modified = True
 
 
 def save_answer(key: str, value):
@@ -16,7 +16,7 @@ def save_answer(key: str, value):
     if 'answers' not in session:
         session['answers'] = {}
     session['answers'][key] = value
-    session.modified         = True
+    session.modified = True
 
 
 def get_answers() -> dict:
@@ -33,7 +33,7 @@ def get_session_token() -> str:
     """Get or create a unique session token."""
     if 'session_token' not in session:
         session['session_token'] = str(uuid.uuid4())
-        session.modified          = True
+        session.modified = True
     return session['session_token']
 
 
@@ -45,4 +45,10 @@ def get_current_step() -> int:
 def set_current_step(step: int):
     """Update the current step in session."""
     session['current_step'] = step
-    session.modified         = True
+    session.modified = True
+
+
+# Aliases for compatibility with app.py
+def save_answers(key, value):
+    """Alias for save_answer (compatibility)"""
+    save_answer(key, value)
