@@ -877,3 +877,21 @@ footer .text-muted {
     font-size: 0.65rem;
   }
 }
+/* Step number circle */
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--teal-light);
+  color: var(--teal);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+[data-theme="dark"] .step-number {
+  background: var(--teal-dark);
+  color: white;
+}
