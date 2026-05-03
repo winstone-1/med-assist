@@ -22,8 +22,7 @@ COPY . .
 # Create instance directory for database
 RUN mkdir -p instance
 
-# Run seed to populate database
-RUN python seed.py
+
 
 EXPOSE 5000
 
