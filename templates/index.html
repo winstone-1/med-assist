@@ -1,111 +1,252 @@
 {% extends 'base.html' %}
-{% block title %}MedAssist — Symptom Checker & First Aid Guide{% endblock %}
+{% block title %}MedAssist — Your Health Companion{% endblock %}
 {% block content %}
 
 <!-- Hero Section -->
-<div class="hero-section text-center py-5">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="hero-icon mb-3">
-        <i class="fa-solid fa-heart-pulse fa-4x text-teal"></i>
+<section class="hero-section-modern text-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="hero-badge mb-3">
+          <span class="badge bg-teal-light text-teal">Trusted by 10,000+ users</span>
+        </div>
+        <h1 class="display-4 fw-bold mb-3">
+          Your Health, 
+          <span class="text-gradient">Simplified</span>
+        </h1>
+        <p class="lead text-muted mb-4">
+          MedAssist helps you understand your symptoms, find appropriate first aid, 
+          and track your health journey — all in one place.
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="{{ url_for('symptom_form') }}" class="btn btn-teal btn-lg px-4">
+            <i class="fa-solid fa-stethoscope me-2"></i>Check Symptoms
+          </a>
+          <a href="{{ url_for('firstaid_list') }}" class="btn btn-outline-teal btn-lg px-4">
+            <i class="fa-solid fa-kit-medical me-2"></i>First Aid Library
+          </a>
+          {% if not current_user.is_authenticated %}
+          <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-4 border">
+            <i class="fa-solid fa-user-plus me-2"></i>Sign Up Free
+          </a>
+          {% endif %}
+        </div>
       </div>
-      <h1 class="display-5 fw-bold text-teal mb-3">
-        Your First Step to Feeling Better
-      </h1>
-      <p class="lead text-muted mb-4">
-        Describe your symptoms, get possible condition matches,
-        access first aid guides, and live drug safety data from OpenFDA.
-      </p>
-      <div class="d-flex justify-content-center gap-3 flex-wrap">
-        <a href="{{ url_for('symptom_form') }}" class="btn btn-teal btn-lg px-4">
-          <i class="fa-solid fa-stethoscope me-2"></i>Start Symptom Check
-        </a>
-        <a href="{{ url_for('firstaid_list') }}" class="btn btn-outline-teal btn-lg px-4">
-          <i class="fa-solid fa-kit-medical me-2"></i>First Aid Library
-        </a>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section py-5">
+  <div class="container">
+    <div class="row text-center g-4">
+      <div class="col-md-3 col-6">
+        <div class="stat-card-modern">
+          <div class="stat-number">50+</div>
+          <div class="stat-label">Common Conditions</div>
+        </div>
       </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card-modern">
+          <div class="stat-number">20+</div>
+          <div class="stat-label">First Aid Guides</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card-modern">
+          <div class="stat-number">10K+</div>
+          <div class="stat-label">Happy Users</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-card-modern">
+          <div class="stat-number">24/7</div>
+          <div class="stat-label">Emergency Support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="features-section py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Everything You Need</h2>
+      <p class="text-muted">Comprehensive health tools at your fingertips</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-stethoscope"></i>
+          </div>
+          <h5 class="fw-bold">Symptom Checker</h5>
+          <p class="text-muted">Answer simple questions and get potential condition matches with severity ratings.</p>
+          <a href="{{ url_for('symptom_form') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-pills"></i>
+          </div>
+          <h5 class="fw-bold">Live Drug Data</h5>
+          <p class="text-muted">Real-time drug warnings and information from OpenFDA database.</p>
+          <a href="{{ url_for('symptom_form') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-book-medical"></i>
+          </div>
+          <h5 class="fw-bold">First Aid Library</h5>
+          <p class="text-muted">Step-by-step guides for common emergencies and injuries.</p>
+          <a href="{{ url_for('firstaid_list') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-calendar-check"></i>
+          </div>
+          <h5 class="fw-bold">Appointment Scheduler</h5>
+          <p class="text-muted">Never miss a doctor's appointment with our smart scheduler.</p>
+          <a href="{{ url_for('appointments') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-heartbeat"></i>
+          </div>
+          <h5 class="fw-bold">BP Tracker</h5>
+          <p class="text-muted">Monitor your blood pressure and track trends over time.</p>
+          <a href="{{ url_for('bp_tracker') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="feature-card-modern h-100">
+          <div class="feature-icon-lg">
+            <i class="fa-solid fa-leaf"></i>
+          </div>
+          <h5 class="fw-bold">Wellness Tips</h5>
+          <p class="text-muted">Evidence-based health tips to improve your wellbeing.</p>
+          <a href="{{ url_for('wellness') }}" class="btn-link">Learn more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section class="how-it-works py-5 bg-teal-light">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">How It Works</h2>
+      <p class="text-muted">Three simple steps to better health insights</p>
+    </div>
+    <div class="row text-center g-4">
+      <div class="col-md-4">
+        <div class="step-circle mx-auto">1</div>
+        <h5 class="fw-bold mt-3">Describe Symptoms</h5>
+        <p class="text-muted">Answer a few questions about your symptoms and health history.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="step-circle mx-auto">2</div>
+        <h5 class="fw-bold mt-3">Get Insights</h5>
+        <p class="text-muted">Receive potential condition matches with severity ratings.</p>
+      </div>
+      <div class="col-md-4">
+        <div class="step-circle mx-auto">3</div>
+        <h5 class="fw-bold mt-3">Take Action</h5>
+        <p class="text-muted">Access first aid guides, drug info, and consult a doctor.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">What Our Users Say</h2>
+      <p class="text-muted">Trusted by thousands of users worldwide</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <p class="mb-3">"MedAssist helped me identify my symptoms before seeing a doctor. The severity ratings gave me peace of mind."</p>
+          <div class="d-flex align-items-center">
+            <div class="testimonial-avatar bg-teal text-white rounded-circle me-3">S</div>
+            <div>
+              <strong>Sarah Johnson</strong>
+              <div class="stars"><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <p class="mb-3">"The first aid guides are incredibly detailed and easy to follow. A must-have app for every family."</p>
+          <div class="d-flex align-items-center">
+            <div class="testimonial-avatar bg-teal text-white rounded-circle me-3">M</div>
+            <div>
+              <strong>Michael Chen</strong>
+              <div class="stars"><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <i class="fa-solid fa-quote-left quote-icon"></i>
+          <p class="mb-3">"The BP tracker and medication reminders keep me on top of my health. Highly recommend!"</p>
+          <div class="d-flex align-items-center">
+            <div class="testimonial-avatar bg-teal text-white rounded-circle me-3">D</div>
+            <div>
+              <strong>David Okonkwo</strong>
+              <div class="stars"><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i><i class="fa-solid fa-star text-warning"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section py-5">
+  <div class="container text-center">
+    <div class="cta-card">
+      <h3 class="fw-bold mb-3">Ready to take control of your health?</h3>
+      <p class="mb-4">Join thousands of users who trust MedAssist for their health decisions.</p>
       {% if not current_user.is_authenticated %}
-      <p class="text-muted small mt-3">
-        <a href="{{ url_for('register') }}" class="text-teal fw-semibold">Sign up free</a>
-        to save your symptom history
-      </p>
+      <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-5">
+        <i class="fa-solid fa-user-plus me-2"></i>Create Free Account
+      </a>
       {% else %}
-      <p class="text-muted small mt-3">
-        Signed in as <strong>{{ current_user.username }}</strong> — your checks are being saved
-      </p>
+      <a href="{{ url_for('symptom_form') }}" class="btn btn-light btn-lg px-5">
+        <i class="fa-solid fa-stethoscope me-2"></i>Start Symptom Check
+      </a>
       {% endif %}
     </div>
   </div>
-</div>
+</section>
 
-<!-- Feature cards -->
-<div class="row g-4 mt-2">
-  <div class="col-lg-3 col-md-6">
-    <div class="card feature-card h-100 shadow-sm p-3 text-center">
-      <div class="feature-icon mx-auto mb-3">
-        <i class="fa-solid fa-stethoscope fa-2x text-teal"></i>
-      </div>
-      <h6 class="fw-bold">Symptom Checker</h6>
-      <p class="text-muted small">
-        Answer questions and get condition matches ranked by severity.
-      </p>
-      <a href="{{ url_for('symptom_form') }}" class="btn btn-sm btn-teal w-100 mt-auto">
-        Start Check
-      </a>
+<!-- Severity Legend -->
+<div class="container mb-4">
+  <div class="card border-0 bg-light p-3">
+    <h6 class="fw-bold mb-3 text-center text-muted">Severity Scale Guide</h6>
+    <div class="d-flex justify-content-center gap-3 flex-wrap">
+      <span class="badge severity-badge" data-severity="low">Low - Self Care</span>
+      <span class="badge severity-badge" data-severity="moderate">Moderate - Monitor</span>
+      <span class="badge severity-badge" data-severity="urgent">Urgent - Seek Care</span>
+      <span class="badge severity-badge" data-severity="emergency">Emergency - Call 999</span>
     </div>
-  </div>
-  <div class="col-lg-3 col-md-6">
-    <div class="card feature-card h-100 shadow-sm p-3 text-center">
-      <div class="feature-icon mx-auto mb-3">
-        <i class="fa-solid fa-pills fa-2x text-teal"></i>
-      </div>
-      <h6 class="fw-bold">Live Drug Data</h6>
-      <p class="text-muted small">
-        Real-time drug warnings from the US FDA OpenFDA database.
-      </p>
-      <a href="{{ url_for('symptom_form') }}" class="btn btn-sm btn-outline-teal w-100 mt-auto">
-        Try It
-      </a>
-    </div>
-  </div>
-  <div class="col-lg-3 col-md-6">
-    <div class="card feature-card h-100 shadow-sm p-3 text-center">
-      <div class="feature-icon mx-auto mb-3">
-        <i class="fa-solid fa-kit-medical fa-2x text-teal"></i>
-      </div>
-      <h6 class="fw-bold">First Aid Library</h6>
-      <p class="text-muted small">
-        Step-by-step guides for choking, burns, bleeding and more.
-      </p>
-      <a href="{{ url_for('firstaid_list') }}" class="btn btn-sm btn-outline-teal w-100 mt-auto">
-        View Guides
-      </a>
-    </div>
-  </div>
-  <div class="col-lg-3 col-md-6">
-    <div class="card feature-card h-100 shadow-sm p-3 text-center">
-      <div class="feature-icon mx-auto mb-3">
-        <i class="fa-solid fa-weight-scale fa-2x text-teal"></i>
-      </div>
-      <h6 class="fw-bold">BMI Calculator</h6>
-      <p class="text-muted small">
-        Calculate your Body Mass Index and get health guidance.
-      </p>
-      <a href="{{ url_for('bmi_calculator') }}" class="btn btn-sm btn-outline-teal w-100 mt-auto">
-        Calculate
-      </a>
-    </div>
-  </div>
-</div>
-
-<!-- Severity legend -->
-<div class="card border-0 bg-light mt-4 p-3">
-  <h6 class="fw-bold mb-3 text-center text-muted">Severity Scale</h6>
-  <div class="d-flex justify-content-center gap-3 flex-wrap">
-    <span class="badge severity-badge" data-severity="low">Low - Self Care</span>
-    <span class="badge severity-badge" data-severity="moderate">Moderate - Monitor</span>
-    <span class="badge severity-badge" data-severity="urgent">Urgent - Seek Care</span>
-    <span class="badge severity-badge" data-severity="emergency">Emergency - Call 999</span>
   </div>
 </div>
 
