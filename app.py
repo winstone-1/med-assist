@@ -21,7 +21,7 @@ from session_manager import (
 
 load_dotenv()
 
-bcrypt       = Bcrypt()
+bcrypt        = Bcrypt()
 login_manager = LoginManager()
 
 
@@ -42,16 +42,14 @@ def create_app():
     db.init_app(app)
     bcrypt.init_app(app)
     login_manager.init_app(app)
-    login_manager.login_view         = 'login'
-    login_manager.login_message      = 'Please log in to access this page.'
+    login_manager.login_view             = 'login'
+    login_manager.login_message          = 'Please log in to access this page.'
     login_manager.login_message_category = 'warning'
 
     with app.app_context():
         db.create_all()
 
-    # ────────────────────────────────────────────────────────────────────────
-    # AUTH ROUTES
-    # ────────────────────────────────────────────────────────────────────────
+    # ── Auth Routes ───────────────────────────────────────────────────────────
 
     @app.route('/register', methods=['GET', 'POST'])
     def register():
@@ -66,15 +64,12 @@ def create_app():
             if not username or not email or not password:
                 flash('All fields are required.', 'danger')
                 return render_template('register.html')
-
             if password != confirm:
                 flash('Passwords do not match.', 'danger')
                 return render_template('register.html')
-
             if User.query.filter_by(email=email).first():
                 flash('Email already registered.', 'danger')
                 return render_template('register.html')
-
             if User.query.filter_by(username=username).first():
                 flash('Username already taken.', 'danger')
                 return render_template('register.html')
@@ -87,7 +82,6 @@ def create_app():
             return redirect(url_for('login'))
 
         return render_template('register.html')
-
 
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -108,14 +102,12 @@ def create_app():
 
         return render_template('login.html')
 
-
     @app.route('/logout')
     @login_required
     def logout():
         logout_user()
         flash('You have been logged out.', 'info')
         return redirect(url_for('index'))
-
 
     @app.route('/dashboard')
     @login_required
@@ -125,14 +117,28 @@ def create_app():
         ).order_by(SymptomHistory.created_at.desc()).limit(10).all()
         return render_template('dashboard.html', history=history)
 
-    # ────────────────────────────────────────────────────────────────────────
-    # MAIN ROUTES
-    # ────────────────────────────────────────────────────────────────────────
+    @app.route('/profile')
+    @login_required
+    def profile():
+        return render_template('profile.html')
+
+    @app.route('/history/delete/<int:history_id>', methods=['POST'])
+    @login_required
+    def delete_history(history_id):
+        record = SymptomHistory.query.get_or_404(history_id)
+        if record.user_id != current_user.id:
+            flash('Unauthorized.', 'danger')
+            return redirect(url_for('dashboard'))
+        db.session.delete(record)
+        db.session.commit()
+        flash('Record deleted.', 'success')
+        return redirect(url_for('dashboard'))
+
+    # ── Main Routes ───────────────────────────────────────────────────────────
 
     @app.route('/')
     def index():
         return render_template('index.html')
-
 
     @app.route('/symptom-checker', methods=['GET', 'POST'])
     def symptom_form():
@@ -157,7 +163,6 @@ def create_app():
             total=total
         )
 
-
     @app.route('/results')
     def results():
         answers    = get_answers()
@@ -171,7 +176,6 @@ def create_app():
 
         has_emergency = any(i['severity'] == 'emergency' for i in conditions)
 
-        # ── Save to history if logged in ─────────────────────────────────────
         if current_user.is_authenticated and conditions:
             results_data = [
                 {
@@ -195,36 +199,59 @@ def create_app():
             has_emergency=has_emergency
         )
 
-
     @app.route('/clear')
     def clear():
         clear_session()
         return redirect(url_for('symptom_form'))
-
 
     @app.route('/first-aid')
     def firstaid_list():
         guides = FirstAidGuide.query.order_by(FirstAidGuide.severity).all()
         return render_template('firstaid_list.html', guides=guides)
 
-
     @app.route('/first-aid/<int:guide_id>')
     def firstaid_detail(guide_id):
         guide = FirstAidGuide.query.get_or_404(guide_id)
         return render_template('firstaid_detail.html', guide=guide)
 
+    @app.route('/bmi-calculator', methods=['GET', 'POST'])
+    def bmi_calculator():
+        bmi_result = None
+        if request.method == 'POST':
+            try:
+                weight = float(request.form.get('weight', 0))
+                height = float(request.form.get('height', 0)) / 100
+                if height > 0:
+                    bmi = round(weight / (height ** 2), 1)
+                    if bmi < 18.5:
+                        category = 'Underweight'
+                        color    = 'info'
+                    elif bmi < 25:
+                        category = 'Normal weight'
+                        color    = 'success'
+                    elif bmi < 30:
+                        category = 'Overweight'
+                        color    = 'warning'
+                    else:
+                        category = 'Obese'
+                        color    = 'danger'
+                    bmi_result = {
+                        'bmi':      bmi,
+                        'category': category,
+                        'color':    color
+                    }
+            except (ValueError, ZeroDivisionError):
+                flash('Please enter valid height and weight values.', 'danger')
+        return render_template('bmi_calculator.html', bmi_result=bmi_result)
 
     @app.route('/emergency')
     def emergency():
         return render_template('emergency.html')
 
-
     @app.route('/disclaimer')
     def disclaimer():
         return render_template('disclaimer.html')
 
-
-    # ── 404 handler ───────────────────────────────────────────────────────────
     @app.errorhandler(404)
     def page_not_found(e):
         return render_template('404.html'), 404

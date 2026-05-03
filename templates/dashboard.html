@@ -5,16 +5,16 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h2 class="fw-bold text-teal mb-0">
-      <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+      <i class="fa-solid fa-gauge me-2"></i>My Dashboard
     </h2>
     <p class="text-muted small mt-1">Welcome back, {{ current_user.username }}</p>
   </div>
   <a href="{{ url_for('symptom_form') }}" class="btn btn-teal">
-    <i class="bi bi-plus-circle me-2"></i>New Check
+    <i class="fa-solid fa-plus me-1"></i>New Check
   </a>
 </div>
 
-<!-- Stats row -->
+<!-- Stats -->
 <div class="row g-3 mb-4">
   <div class="col-md-4">
     <div class="stat-card card p-3 text-center">
@@ -25,15 +25,15 @@
   <div class="col-md-4">
     <div class="stat-card card p-3 text-center">
       <div class="fs-1 fw-bold">
-        {% set emergency_count = [] %}
+        {% set ec = namespace(count=0) %}
         {% for h in history %}
           {% for r in h.results %}
             {% if r.severity == 'emergency' %}
-              {% if emergency_count.append(1) %}{% endif %}
+              {% set ec.count = ec.count + 1 %}
             {% endif %}
           {% endfor %}
         {% endfor %}
-        {{ emergency_count | length }}
+        {{ ec.count }}
       </div>
       <div class="small opacity-75">Emergency Flags</div>
     </div>
@@ -50,7 +50,7 @@
 
 <!-- History -->
 <h5 class="fw-bold mb-3">
-  <i class="bi bi-clock-history me-2 text-teal"></i>Recent Symptom Checks
+  <i class="fa-solid fa-clock-rotate-left me-2 text-teal"></i>Recent Symptom Checks
 </h5>
 
 {% if history %}
@@ -59,8 +59,8 @@
     <div class="card-body">
       <div class="d-flex justify-content-between align-items-start">
         <div>
-          <p class="fw-semibold mb-1">
-            <i class="bi bi-calendar3 me-1 text-muted"></i>
+          <p class="fw-semibold mb-1 small text-muted">
+            <i class="fa-regular fa-calendar me-1"></i>
             {{ h.created_at.strftime('%d %B %Y at %H:%M') }}
           </p>
           {% if h.results %}
@@ -73,16 +73,26 @@
             <span class="text-muted small">No conditions matched</span>
           {% endif %}
         </div>
-        <a href="{{ url_for('symptom_form') }}" class="btn btn-sm btn-outline-teal">
-          <i class="bi bi-arrow-repeat me-1"></i>Check Again
-        </a>
+        <div class="d-flex gap-2">
+          <a href="{{ url_for('symptom_form') }}"
+             class="btn btn-sm btn-outline-teal">
+            Check Again
+          </a>
+          <form method="POST"
+                action="{{ url_for('delete_history', history_id=h.id) }}"
+                onsubmit="return confirm('Delete this record?')">
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
   {% endfor %}
 {% else %}
   <div class="card border-0 bg-light p-4 text-center">
-    <i class="bi bi-clipboard-heart fs-1 text-muted mb-2"></i>
+    <i class="fa-solid fa-clipboard-list fa-3x text-muted mb-3"></i>
     <p class="text-muted">No symptom checks yet.</p>
     <a href="{{ url_for('symptom_form') }}" class="btn btn-teal">
       Start Your First Check
