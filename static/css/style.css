@@ -1,37 +1,162 @@
 /* style.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --teal:       #1A7A7A;
-  --teal-light: #E6F4F4;
-  --navy:       #0D2B4E;
+  --teal:        #1A7A7A;
+  --teal-light:  #E6F4F4;
+  --teal-dark:   #145f5f;
+  --navy:        #0D2B4E;
+  --light-bg:    #F8FFFE;
 }
 
-.bg-teal          { background-color: var(--teal) !important; }
-.text-teal        { color: var(--teal) !important; }
-.btn-teal         { background-color: var(--teal); color: #fff; border: none; }
-.btn-teal:hover   { background-color: #145f5f; color: #fff; }
-.btn-outline-teal { border-color: var(--teal); color: var(--teal); }
-.btn-outline-teal:hover { background-color: var(--teal); color: #fff; }
+* { font-family: 'Inter', sans-serif; }
 
+body { background-color: var(--light-bg); }
+
+/* ── Navbar ──────────────────────────────────────────────────────────────── */
+.bg-teal        { background: linear-gradient(135deg, #1A7A7A, #0D5F5F) !important; }
+.navbar-brand   { font-size: 1.4rem; letter-spacing: -0.5px; }
+.nav-link       { font-weight: 500; transition: opacity 0.2s; }
+.nav-link:hover { opacity: 0.8; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.btn-teal {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: #fff; border: none;
+  box-shadow: 0 2px 8px rgba(26,122,122,0.3);
+  transition: all 0.2s;
+}
+.btn-teal:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(26,122,122,0.4);
+  color: #fff;
+}
+.btn-outline-teal {
+  border: 2px solid var(--teal);
+  color: var(--teal);
+  transition: all 0.2s;
+}
+.btn-outline-teal:hover {
+  background: var(--teal);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+/* ── Disclaimer ──────────────────────────────────────────────────────────── */
 .disclaimer-banner {
-  background-color: #fff3cd;
+  background: linear-gradient(90deg, #fff3cd, #ffeeba);
   color: #856404;
   font-size: 0.82rem;
+  border-bottom: 1px solid #ffc107;
 }
 
-/* Severity left border indicators */
-.severity-low       { border-left: 5px solid #16A34A !important; }
-.severity-moderate  { border-left: 5px solid #D97706 !important; }
-.severity-urgent    { border-left: 5px solid #EA580C !important; }
-.severity-emergency { border-left: 5px solid #DC2626 !important; }
+/* ── Hero section ────────────────────────────────────────────────────────── */
+.hero-section {
+  background: linear-gradient(135deg, #E6F4F4 0%, #F8FFFE 100%);
+  border-radius: 20px;
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #d0eded;
+}
 
-/* Card hover lift */
+/* ── Cards ───────────────────────────────────────────────────────────────── */
 .card {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 16px !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #e8f4f4 !important;
 }
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08) !important;
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(26,122,122,0.12) !important;
+}
+.feature-card { border-top: 4px solid var(--teal) !important; }
+
+/* ── Severity borders ────────────────────────────────────────────────────── */
+.severity-low       { border-left: 6px solid #16A34A !important; }
+.severity-moderate  { border-left: 6px solid #D97706 !important; }
+.severity-urgent    { border-left: 6px solid #EA580C !important; }
+.severity-emergency { border-left: 6px solid #DC2626 !important; }
+
+/* ── Severity badges ─────────────────────────────────────────────────────── */
+.severity-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  padding: 6px 14px !important;
+  border-radius: 20px !important;
 }
 
-/* Progress bar */
-.progress-bar.bg-teal { background-color: var(--teal) !important; }
+/* ── Progress bar ────────────────────────────────────────────────────────── */
+.progress { border-radius: 10px; background: #e8f4f4; }
+.progress-bar.bg-teal {
+  background: linear-gradient(90deg, var(--teal), #2aa8a8) !important;
+  border-radius: 10px;
+}
+
+/* ── Form ────────────────────────────────────────────────────────────────── */
+.form-check-input:checked { background-color: var(--teal); border-color: var(--teal); }
+.form-control:focus       { border-color: var(--teal); box-shadow: 0 0 0 0.2rem rgba(26,122,122,0.2); }
+
+/* ── Auth forms ──────────────────────────────────────────────────────────── */
+.auth-card {
+  max-width: 440px;
+  margin: 3rem auto;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 30px rgba(26,122,122,0.15) !important;
+  border: none !important;
+}
+.auth-card .card-header {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  border-radius: 20px 20px 0 0 !important;
+  padding: 2rem;
+}
+
+/* ── Dashboard ───────────────────────────────────────────────────────────── */
+.history-card {
+  border-left: 4px solid var(--teal) !important;
+  border-radius: 12px !important;
+}
+.stat-card {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: white;
+  border-radius: 16px !important;
+  border: none !important;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
+footer {
+  background: linear-gradient(135deg, #1a1a2e, #16213e) !important;
+  margin-top: 4rem;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.5s ease forwards; }
+
+/* ── Loading spinner ─────────────────────────────────────────────────────── */
+.spinner-teal { color: var(--teal); }
+
+/* ── Step indicator ──────────────────────────────────────────────────────── */
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.step-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #d0eded;
+  transition: background 0.3s;
+}
+.step-dot.active { background: var(--teal); transform: scale(1.3); }
+.step-dot.done   { background: var(--teal-dark); }
+
+/* ── Print styles ────────────────────────────────────────────────────────── */
+@media print {
+  .navbar, footer, .disclaimer-banner, .btn, .no-print { display: none !important; }
+  .card { box-shadow: none !important; border: 1px solid #ccc !important; }
+}
