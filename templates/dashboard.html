@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — MedAssist{% endblock %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h2 class="fw-bold text-teal mb-0">
+      <i class="bi bi-speedometer2 me-2"></i>My Dashboard
+    </h2>
+    <p class="text-muted small mt-1">Welcome back, {{ current_user.username }}</p>
+  </div>
+  <a href="{{ url_for('symptom_form') }}" class="btn btn-teal">
+    <i class="bi bi-plus-circle me-2"></i>New Check
+  </a>
+</div>
+
+<!-- Stats row -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card card p-3 text-center">
+      <div class="fs-1 fw-bold">{{ history | length }}</div>
+      <div class="small opacity-75">Total Checks</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card card p-3 text-center">
+      <div class="fs-1 fw-bold">
+        {% set emergency_count = [] %}
+        {% for h in history %}
+          {% for r in h.results %}
+            {% if r.severity == 'emergency' %}
+              {% if emergency_count.append(1) %}{% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        {{ emergency_count | length }}
+      </div>
+      <div class="small opacity-75">Emergency Flags</div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card card p-3 text-center">
+      <div class="fs-1 fw-bold">
+        {{ current_user.created_at.strftime('%b %Y') }}
+      </div>
+      <div class="small opacity-75">Member Since</div>
+    </div>
+  </div>
+</div>
+
+<!-- History -->
+<h5 class="fw-bold mb-3">
+  <i class="bi bi-clock-history me-2 text-teal"></i>Recent Symptom Checks
+</h5>
+
+{% if history %}
+  {% for h in history %}
+  <div class="card history-card mb-3 shadow-sm">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <p class="fw-semibold mb-1">
+            <i class="bi bi-calendar3 me-1 text-muted"></i>
+            {{ h.created_at.strftime('%d %B %Y at %H:%M') }}
+          </p>
+          {% if h.results %}
+            {% for r in h.results[:3] %}
+            <span class="badge severity-badge me-1" data-severity="{{ r.severity }}">
+              {{ r.condition }}
+            </span>
+            {% endfor %}
+          {% else %}
+            <span class="text-muted small">No conditions matched</span>
+          {% endif %}
+        </div>
+        <a href="{{ url_for('symptom_form') }}" class="btn btn-sm btn-outline-teal">
+          <i class="bi bi-arrow-repeat me-1"></i>Check Again
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <div class="card border-0 bg-light p-4 text-center">
+    <i class="bi bi-clipboard-heart fs-1 text-muted mb-2"></i>
+    <p class="text-muted">No symptom checks yet.</p>
+    <a href="{{ url_for('symptom_form') }}" class="btn btn-teal">
+      Start Your First Check
+    </a>
+  </div>
+{% endif %}
+
+{% endblock %}
