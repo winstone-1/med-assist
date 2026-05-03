@@ -1,5 +1,6 @@
 # seed.py
 import json
+import os
 from app import create_app
 from models import db, Symptom, Condition, Question, FirstAidGuide
 
@@ -214,9 +215,22 @@ FIRST_AID_GUIDES = [
 ]
 
 
-# ── Seed function ─────────────────────────────────────────────────────────────
+# ── Seed function with fix for Render ─────────────────────────────────────────
 def seed():
     with app.app_context():
+        # Create instance directory if it doesn't exist
+        os.makedirs('instance', exist_ok=True)
+        
+        # Check if data already exists
+        try:
+            existing_count = Symptom.query.count()
+            if existing_count > 0:
+                print(f"Database already has {existing_count} symptoms. Skipping seed.")
+                print("To re-seed, delete instance/medassist.db and redeploy.")
+                return
+        except Exception as e:
+            print(f"Creating new database...")
+        
         print('Dropping existing tables...')
         db.drop_all()
 
@@ -235,7 +249,7 @@ def seed():
         # Seed Conditions + attach Symptoms
         for c_data in CONDITIONS:
             slugs = c_data.pop('symptom_slugs')
-            obj   = Condition(**c_data)
+            obj = Condition(**c_data)
             obj.symptoms = [sym_map[sl] for sl in slugs if sl in sym_map]
             db.session.add(obj)
         db.session.flush()
@@ -244,7 +258,7 @@ def seed():
         # Seed Questions
         for q_data in QUESTIONS:
             opts = q_data.pop('options')
-            obj  = Question(options_json=json.dumps(opts), **q_data)
+            obj = Question(options_json=json.dumps(opts), **q_data)
             db.session.add(obj)
         db.session.flush()
         print(f'  ✓ Questions seeded ({len(QUESTIONS)} records)')
@@ -252,7 +266,7 @@ def seed():
         # Seed First Aid Guides
         for g_data in FIRST_AID_GUIDES:
             steps = g_data.pop('steps')
-            obj   = FirstAidGuide(steps_json=json.dumps(steps), **g_data)
+            obj = FirstAidGuide(steps_json=json.dumps(steps), **g_data)
             db.session.add(obj)
 
         db.session.commit()

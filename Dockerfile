@@ -22,11 +22,9 @@ COPY . .
 # Create instance directory for database
 RUN mkdir -p instance
 
-# Run seed - this will work now because instance folder exists
+# Run seed - this will work now
 RUN python seed.py
 
-# Expose the port
 EXPOSE 5000
 
-# Run the application with gunicorn
 CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000"]
