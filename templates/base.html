@@ -52,20 +52,22 @@
         </ul>
         <ul class="navbar-nav ms-auto">
           {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('dashboard') }}">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
               <i class="fa-solid fa-circle-user me-1"></i>{{ current_user.username }}
             </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('profile') }}">
-              <i class="fa-solid fa-gear me-1"></i>Profile
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('logout') }}">
-              <i class="fa-solid fa-right-from-bracket me-1"></i>Logout
-            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">
+                <i class="fa-solid fa-gauge me-2"></i>Dashboard
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('profile') }}">
+                <i class="fa-solid fa-user me-2"></i>Profile
+              </a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="{{ url_for('logout') }}">
+                <i class="fa-solid fa-right-from-bracket me-2"></i>Logout
+              </a></li>
+            </ul>
           </li>
           {% else %}
           <li class="nav-item">
@@ -112,18 +114,38 @@
   </button>
 
   <!-- Footer -->
-  <footer class="text-light text-center py-4 small">
+  <footer class="footer mt-auto py-4">
     <div class="container">
-      <p class="mb-1 fw-semibold fs-6">
-        <i class="fa-solid fa-heart-pulse text-danger me-1"></i>MedAssist
-      </p>
-      <p class="text-secondary mb-2">
-        Educational capstone project — KCA University BSD 2026
-      </p>
-      <div class="d-flex justify-content-center gap-3">
-        <a href="{{ url_for('disclaimer') }}" class="text-warning small">Medical Disclaimer</a>
-        <a href="{{ url_for('emergency') }}" class="text-danger small">Emergency Contacts</a>
-        <a href="{{ url_for('firstaid_list') }}" class="text-info small">First Aid Library</a>
+      <div class="row">
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h6 class="fw-bold mb-2">
+            <i class="fa-solid fa-heart-pulse text-teal me-1"></i>MedAssist
+          </h6>
+          <p class="text-muted small">
+            Your trusted companion for symptom assessment and first aid guidance.
+          </p>
+        </div>
+        <div class="col-md-4 mb-3 mb-md-0">
+          <h6 class="fw-bold mb-2">Quick Links</h6>
+          <ul class="list-unstyled small">
+            <li><a href="{{ url_for('symptom_form') }}" class="text-muted text-decoration-hover">Symptom Checker</a></li>
+            <li><a href="{{ url_for('firstaid_list') }}" class="text-muted text-decoration-hover">First Aid Library</a></li>
+            <li><a href="{{ url_for('bmi_calculator') }}" class="text-muted text-decoration-hover">BMI Calculator</a></li>
+            <li><a href="{{ url_for('emergency') }}" class="text-muted text-decoration-hover">Emergency Contacts</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h6 class="fw-bold mb-2">Legal</h6>
+          <ul class="list-unstyled small">
+            <li><a href="{{ url_for('disclaimer') }}" class="text-muted text-decoration-hover">Medical Disclaimer</a></li>
+            <li><a href="#" class="text-muted text-decoration-hover">Privacy Policy</a></li>
+            <li><a href="#" class="text-muted text-decoration-hover">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      <hr class="my-3">
+      <div class="text-center text-muted small">
+        &copy; 2026 MedAssist. All rights reserved.
       </div>
     </div>
   </footer>
