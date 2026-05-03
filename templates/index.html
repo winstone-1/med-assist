@@ -1,58 +1,98 @@
 {% extends 'base.html' %}
-{% block title %}MedAssist — Home{% endblock %}
+{% block title %}MedAssist — Symptom Checker & First Aid Guide{% endblock %}
 {% block content %}
 
-<div class="row align-items-center py-5">
-  <div class="col-md-7">
-    <h1 class="display-5 fw-bold text-teal">Your First Step to Feeling Better</h1>
-    <p class="lead text-muted mt-3">
-      Describe your symptoms and get guidance on possible conditions,
-      first aid steps, and when to seek professional medical help.
-    </p>
-    <a href="{{ url_for('symptom_form') }}" class="btn btn-teal btn-lg me-2 mt-2">
-      Start Symptom Check
-    </a>
-    <a href="{{ url_for('firstaid_list') }}" class="btn btn-outline-teal btn-lg mt-2">
-      Browse First Aid Guides
-    </a>
+<!-- Hero -->
+<div class="hero-section text-center">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="mb-3" style="font-size: 4rem;">🩺</div>
+      <h1 class="display-5 fw-bold text-teal mb-3">
+        Your First Step to Feeling Better
+      </h1>
+      <p class="lead text-muted mb-4">
+        Describe your symptoms, get possible condition matches,
+        access first aid guides, and live drug safety data from OpenFDA.
+      </p>
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{{ url_for('symptom_form') }}" class="btn btn-teal btn-lg px-4">
+          <i class="bi bi-search-heart me-2"></i>Start Symptom Check
+        </a>
+        <a href="{{ url_for('firstaid_list') }}" class="btn btn-outline-teal btn-lg px-4">
+          <i class="bi bi-bandaid me-2"></i>First Aid Library
+        </a>
+      </div>
+      {% if not current_user.is_authenticated %}
+      <p class="text-muted small mt-3">
+        <i class="bi bi-info-circle me-1"></i>
+        <a href="{{ url_for('register') }}" class="text-teal">Sign up free</a>
+        to save your symptom history
+      </p>
+      {% else %}
+      <p class="text-muted small mt-3">
+        <i class="bi bi-check-circle-fill text-success me-1"></i>
+        Signed in as <strong>{{ current_user.username }}</strong> —
+        your checks are being saved
+      </p>
+      {% endif %}
+    </div>
   </div>
 </div>
 
-<hr class="my-4">
+<!-- Feature cards -->
+<div class="row g-4 mt-2">
+  <div class="col-md-4">
+    <div class="card feature-card h-100 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="fs-1 mb-3">🔍</div>
+        <h5 class="fw-bold">Symptom Checker</h5>
+        <p class="text-muted small">
+          Answer a short questionnaire. Our scoring engine matches your
+          symptoms to possible conditions ranked by severity.
+        </p>
+        <a href="{{ url_for('symptom_form') }}"
+           class="btn btn-sm btn-teal mt-auto w-100">Start Check</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card feature-card h-100 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="fs-1 mb-3">💊</div>
+        <h5 class="fw-bold">Live Drug Data</h5>
+        <p class="text-muted small">
+          Results include real-time drug warnings fetched directly
+          from the US FDA OpenFDA database — no API key needed.
+        </p>
+        <a href="{{ url_for('symptom_form') }}"
+           class="btn btn-sm btn-outline-teal mt-auto w-100">Try It</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card feature-card h-100 shadow-sm p-3">
+      <div class="card-body text-center">
+        <div class="fs-1 mb-3">🩹</div>
+        <h5 class="fw-bold">First Aid Library</h5>
+        <p class="text-muted small">
+          Step-by-step guides for choking, burns, bleeding,
+          fractures, and more — colour-coded by severity.
+        </p>
+        <a href="{{ url_for('firstaid_list') }}"
+           class="btn btn-sm btn-outline-teal mt-auto w-100">View Guides</a>
+      </div>
+    </div>
+  </div>
+</div>
 
-<div class="row g-4 text-center">
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm border-0 p-3">
-      <div class="fs-1 mb-2"></div>
-      <h5 class="fw-bold">Symptom Checker</h5>
-      <p class="text-muted small">
-        Answer a short questionnaire and get a list of possible
-        conditions matched to your symptoms.
-      </p>
-      <a href="{{ url_for('symptom_form') }}" class="btn btn-sm btn-teal mt-auto">Start Check</a>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm border-0 p-3">
-      <div class="fs-1 mb-2"></div>
-      <h5 class="fw-bold">First Aid Library</h5>
-      <p class="text-muted small">
-        Step-by-step first aid guides for burns, choking,
-        fractures, bleeding, and more.
-      </p>
-      <a href="{{ url_for('firstaid_list') }}" class="btn btn-sm btn-outline-teal mt-auto">View Guides</a>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="card h-100 shadow-sm border-0 p-3">
-      <div class="fs-1 mb-2"></div>
-      <h5 class="fw-bold">Emergency Info</h5>
-      <p class="text-muted small">
-        Quick access to emergency hotlines and guidance on
-        when to call for immediate help.
-      </p>
-      <a href="{{ url_for('emergency') }}" class="btn btn-sm btn-outline-teal mt-auto">View Contacts</a>
-    </div>
+<!-- Severity legend -->
+<div class="card border-0 bg-light mt-4 p-3">
+  <h6 class="fw-bold mb-3 text-center text-muted">Severity Scale</h6>
+  <div class="d-flex justify-content-center gap-3 flex-wrap">
+    <span class="badge severity-badge" data-severity="low">Low</span>
+    <span class="badge severity-badge" data-severity="moderate">Moderate</span>
+    <span class="badge severity-badge" data-severity="urgent">Urgent</span>
+    <span class="badge severity-badge" data-severity="emergency">Emergency</span>
   </div>
 </div>
 
