@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block title %}Health Journal — MedAssist{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-teal text-white text-center py-3">
+        <i class="fa-solid fa-book-journal-whills fa-2x mb-2"></i>
+        <h4 class="fw-bold mb-0">Health Journal</h4>
+        <p class="small opacity-75 mb-0">Track your daily symptoms, mood, and health notes</p>
+      </div>
+      <div class="card-body p-4">
+        
+        <form method="POST">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Date</label>
+              <input type="date" name="entry_date" class="form-control" value="{{ today }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Mood (1-5)</label>
+              <select name="mood" class="form-select">
+                <option value="5">5 - Excellent</option>
+                <option value="4">4 - Good</option>
+                <option value="3" selected>3 - Okay</option>
+                <option value="2">2 - Not great</option>
+                <option value="1">1 - Terrible</option>
+              </select>
+            </div>
+            <div class="col-md-12">
+              <label class="form-label fw-semibold">Symptoms (comma separated)</label>
+              <input type="text" name="symptoms" class="form-control" placeholder="e.g., headache, fatigue, nausea">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label fw-semibold">Notes</label>
+              <textarea name="notes" class="form-control" rows="3" placeholder="How are you feeling today? Any triggers or observations?"></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-teal w-100 py-2">
+                <i class="fa-solid fa-save me-2"></i>Save Journal Entry
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <h5 class="fw-bold mb-3">
+          <i class="fa-solid fa-clock-rotate-left me-2 text-teal"></i>Recent Journal Entries
+        </h5>
+
+        {% if entries %}
+          {% for entry in entries %}
+          <div class="card mb-3 border-0 shadow-sm">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <strong class="fs-6">{{ entry.entry_date.strftime('%B %d, %Y') }}</strong>
+                  <span class="badge 
+                    {% if entry.mood >= 4 %}bg-success
+                    {% elif entry.mood == 3 %}bg-warning text-dark
+                    {% else %}bg-danger
+                    {% endif %} ms-2">
+                    Mood: {{ entry.mood }}/5
+                  </span>
+                  {% if entry.symptoms %}
+                  <br><small class="text-muted"><i class="fa-solid fa-head-side-medical"></i> {{ entry.symptoms }}</small>
+                  {% endif %}
+                  <p class="mt-2 mb-0">{{ entry.notes }}</p>
+                </div>
+                <form method="POST" action="{{ url_for('delete_journal', entry_id=entry.id) }}">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-4">
+            <i class="fa-solid fa-book-open fa-3x text-muted mb-2"></i>
+            <p class="text-muted">No journal entries yet. Start tracking your health today.</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

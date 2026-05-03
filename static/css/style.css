@@ -686,3 +686,29 @@ footer hr {
 .rounded-5 {
   border-radius: 1.5rem;
 }
+/* ────────────────────────────────────────────────────────────────────────────
+   FOOTER OPACITY FIX - ADD THIS AT THE END OF YOUR CSS
+   ──────────────────────────────────────────────────────────────────────────── */
+footer,
+footer * {
+  opacity: 1 !important;
+}
+
+footer p,
+footer span,
+footer div,
+footer small,
+footer a {
+  opacity: 1 !important;
+  color: #cbd5e1 !important;
+}
+
+footer h6 {
+  opacity: 1 !important;
+  color: #ffffff !important;
+}
+
+footer .text-muted {
+  color: #cbd5e1 !important;
+  opacity: 1 !important;
+}

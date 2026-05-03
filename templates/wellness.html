@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Wellness Tips — MedAssist{% endblock %}
+{% block content %}
+
+<div class="row">
+  <div class="col-12 text-center mb-4">
+    <h2 class="fw-bold text-teal">
+      <i class="fa-solid fa-leaf me-2"></i>Wellness Tips
+    </h2>
+    <p class="text-muted">Evidence-based health tips to improve your wellbeing</p>
+  </div>
+</div>
+
+<!-- Category Filters -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="d-flex flex-wrap gap-2 justify-content-center">
+      <a href="{{ url_for('wellness') }}" class="btn btn-sm {% if not current_category %}btn-teal{% else %}btn-outline-teal{% endif %}">All</a>
+      <a href="{{ url_for('wellness', category='Nutrition') }}" class="btn btn-sm {% if current_category == 'Nutrition' %}btn-teal{% else %}btn-outline-teal{% endif %}">
+        <i class="fa-solid fa-apple-alt"></i> Nutrition
+      </a>
+      <a href="{{ url_for('wellness', category='Exercise') }}" class="btn btn-sm {% if current_category == 'Exercise' %}btn-teal{% else %}btn-outline-teal{% endif %}">
+        <i class="fa-solid fa-person-walking"></i> Exercise
+      </a>
+      <a href="{{ url_for('wellness', category='Mental Health') }}" class="btn btn-sm {% if current_category == 'Mental Health' %}btn-teal{% else %}btn-outline-teal{% endif %}">
+        <i class="fa-solid fa-brain"></i> Mental Health
+      </a>
+      <a href="{{ url_for('wellness', category='Sleep') }}" class="btn btn-sm {% if current_category == 'Sleep' %}btn-teal{% else %}btn-outline-teal{% endif %}">
+        <i class="fa-solid fa-bed"></i> Sleep
+      </a>
+      <a href="{{ url_for('wellness', category='Prevention') }}" class="btn btn-sm {% if current_category == 'Prevention' %}btn-teal{% else %}btn-outline-teal{% endif %}">
+        <i class="fa-solid fa-shield-virus"></i> Prevention
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Tips Grid -->
+<div class="row g-4">
+  {% if tips %}
+    {% for tip in tips %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <span class="badge bg-teal">{{ tip.category }}</span>
+            <small class="text-muted">
+              <i class="fa-regular fa-eye"></i> {{ tip.view_count }} views
+            </small>
+          </div>
+          <h5 class="fw-bold mb-2">{{ tip.title }}</h5>
+          <p class="text-muted small">{{ tip.content[:120] }}{% if tip.content|length > 120 %}...{% endif %}</p>
+          <button class="btn btn-sm btn-outline-teal mt-2" data-bs-toggle="modal" data-bs-target="#tipModal{{ tip.id }}">
+            Read More <i class="fa-solid fa-arrow-right ms-1"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for full content -->
+    <div class="modal fade" id="tipModal{{ tip.id }}" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header bg-teal text-white">
+            <h5 class="modal-title">{{ tip.title }}</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <span class="badge bg-teal mb-3">{{ tip.category }}</span>
+            <p>{{ tip.content }}</p>
+            {% if tip.source %}
+            <hr>
+            <small class="text-muted">Source: {{ tip.source }}</small>
+            {% endif %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="col-12 text-center py-5">
+      <i class="fa-solid fa-newspaper fa-4x text-muted mb-3"></i>
+      <h4 class="text-muted">No wellness tips available</h4>
+      <p>Check back soon for health tips and articles.</p>
+    </div>
+  {% endif %}
+</div>
+
+<!-- Daily Wellness Quote -->
+<div class="row mt-5">
+  <div class="col-12">
+    <div class="card border-0 bg-teal-light text-center p-4">
+      <i class="fa-solid fa-quote-left fa-2x text-teal mb-2"></i>
+      <p class="fs-5 fst-italic mb-2">"The greatest wealth is health."</p>
+      <p class="text-muted small mb-0">- Virgil</p>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

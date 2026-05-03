@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Medication Reminder — MedAssist{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-teal text-white text-center py-3">
+        <i class="fa-solid fa-pill fa-2x mb-2"></i>
+        <h4 class="fw-bold mb-0">Medication Reminder</h4>
+        <p class="small opacity-75 mb-0">Track your medications and never miss a dose</p>
+      </div>
+      <div class="card-body p-4">
+        
+        <form method="POST">
+          <div class="row g-3">
+            <div class="col-md-8">
+              <label class="form-label fw-semibold">Medication Name</label>
+              <input type="text" name="med_name" class="form-control" placeholder="e.g., Lisinopril 10mg" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-semibold">Dosage</label>
+              <input type="text" name="dosage" class="form-control" placeholder="e.g., 1 tablet">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Time of Day</label>
+              <select name="time_of_day" class="form-select">
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+                <option value="Bedtime">Bedtime</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">Frequency</label>
+              <select name="frequency" class="form-select">
+                <option value="Daily">Daily</option>
+                <option value="Twice daily">Twice daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="As needed">As needed</option>
+              </select>
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Instructions</label>
+              <textarea name="instructions" class="form-control" rows="2" placeholder="Take with food, avoid alcohol, etc."></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-teal w-100 py-2">
+                <i class="fa-solid fa-plus me-2"></i>Add Reminder
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <hr class="my-4">
+
+        <h5 class="fw-bold mb-3">
+          <i class="fa-solid fa-list-check me-2 text-teal"></i>Active Reminders
+        </h5>
+
+        {% if reminders %}
+          {% for r in reminders %}
+          <div class="card mb-2 border-0 bg-light">
+            <div class="card-body p-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <strong>{{ r.med_name }}</strong> - {{ r.dosage }}
+                  <br>
+                  <small class="text-muted">{{ r.time_of_day }} | {{ r.frequency }}</small>
+                  {% if r.instructions %}
+                  <br><small class="text-muted"><i class="fa-solid fa-info-circle"></i> {{ r.instructions }}</small>
+                  {% endif %}
+                </div>
+                <form method="POST" action="{{ url_for('delete_medication', med_id=r.id) }}" class="d-inline">
+                  <button type="submit" class="btn btn-sm btn-outline-danger">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div class="text-center py-4">
+            <i class="fa-solid fa-bell-slash fa-3x text-muted mb-2"></i>
+            <p class="text-muted">No active reminders. Add your medications above.</p>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
