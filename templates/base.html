@@ -39,6 +39,28 @@
               <i class="fa-solid fa-kit-medical me-1"></i>First Aid
             </a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+              <i class="fa-solid fa-chart-line me-1"></i>Health Tools
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ url_for('medications') }}">
+                <i class="fa-solid fa-pill me-2"></i>Medication Reminder
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('journal') }}">
+                <i class="fa-solid fa-book-journal-whills me-2"></i>Health Journal
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('appointments') }}">
+                <i class="fa-solid fa-calendar-check me-2"></i>Appointments
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('bp_tracker') }}">
+                <i class="fa-solid fa-heartbeat me-2"></i>BP Tracker
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('wellness') }}">
+                <i class="fa-solid fa-leaf me-2"></i>Wellness Tips
+              </a></li>
+            </ul>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('bmi_calculator') }}">
               <i class="fa-solid fa-weight-scale me-1"></i>BMI Calculator
@@ -130,6 +152,8 @@
           <ul class="list-unstyled small">
             <li><a href="{{ url_for('symptom_form') }}" class="text-muted text-decoration-hover">Symptom Checker</a></li>
             <li><a href="{{ url_for('firstaid_list') }}" class="text-muted text-decoration-hover">First Aid Library</a></li>
+            <li><a href="{{ url_for('medications') }}" class="text-muted text-decoration-hover">Medication Reminder</a></li>
+            <li><a href="{{ url_for('journal') }}" class="text-muted text-decoration-hover">Health Journal</a></li>
             <li><a href="{{ url_for('bmi_calculator') }}" class="text-muted text-decoration-hover">BMI Calculator</a></li>
             <li><a href="{{ url_for('emergency') }}" class="text-muted text-decoration-hover">Emergency Contacts</a></li>
           </ul>
