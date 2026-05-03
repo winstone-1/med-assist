@@ -11,13 +11,17 @@ from flask_login import (
 )
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
-from models import db, User, SymptomHistory, Question, FirstAidGuide
+from models import (
+    db, User, SymptomHistory, Question, FirstAidGuide,
+    MedicationReminder, HealthJournal, Appointment, BloodPressure, WellnessTip
+)
 from symptom_matcher import match_symptoms, get_severity_label
 from api_client import get_drug_warnings
 from session_manager import (
     save_answer, get_answers,
     clear_session, set_current_step
 )
+from datetime import datetime
 
 load_dotenv()
 
@@ -249,6 +253,140 @@ def create_app():
     @app.route('/disclaimer')
     def disclaimer():
         return render_template('disclaimer.html')
+
+    # ============ HEALTH TOOLS ROUTES ============
+
+    @app.route('/medications', methods=['GET', 'POST'])
+    @login_required
+    def medications():
+        if request.method == 'POST':
+            reminder = MedicationReminder(
+                user_id=current_user.id,
+                med_name=request.form.get('med_name'),
+                dosage=request.form.get('dosage'),
+                time_of_day=request.form.get('time_of_day'),
+                frequency=request.form.get('frequency'),
+                instructions=request.form.get('instructions')
+            )
+            db.session.add(reminder)
+            db.session.commit()
+            flash('Medication reminder added!', 'success')
+            return redirect(url_for('medications'))
+        
+        reminders = MedicationReminder.query.filter_by(user_id=current_user.id).all()
+        return render_template('medications.html', reminders=reminders)
+
+    @app.route('/medication/delete/<int:med_id>', methods=['POST'])
+    @login_required
+    def delete_medication(med_id):
+        med = MedicationReminder.query.get_or_404(med_id)
+        if med.user_id == current_user.id:
+            db.session.delete(med)
+            db.session.commit()
+            flash('Reminder deleted.', 'success')
+        return redirect(url_for('medications'))
+
+    @app.route('/journal', methods=['GET', 'POST'])
+    @login_required
+    def journal():
+        if request.method == 'POST':
+            entry = HealthJournal(
+                user_id=current_user.id,
+                entry_date=datetime.strptime(request.form.get('entry_date'), '%Y-%m-%d'),
+                mood=int(request.form.get('mood')),
+                symptoms=request.form.get('symptoms'),
+                notes=request.form.get('notes')
+            )
+            db.session.add(entry)
+            db.session.commit()
+            flash('Journal entry saved!', 'success')
+            return redirect(url_for('journal'))
+        
+        entries = HealthJournal.query.filter_by(user_id=current_user.id).order_by(HealthJournal.entry_date.desc()).all()
+        today = datetime.now().strftime('%Y-%m-%d')
+        return render_template('journal.html', entries=entries, today=today)
+
+    @app.route('/journal/delete/<int:entry_id>', methods=['POST'])
+    @login_required
+    def delete_journal(entry_id):
+        entry = HealthJournal.query.get_or_404(entry_id)
+        if entry.user_id == current_user.id:
+            db.session.delete(entry)
+            db.session.commit()
+            flash('Journal entry deleted.', 'success')
+        return redirect(url_for('journal'))
+
+    @app.route('/appointments', methods=['GET', 'POST'])
+    @login_required
+    def appointments():
+        if request.method == 'POST':
+            apt = Appointment(
+                user_id=current_user.id,
+                doctor_name=request.form.get('doctor_name'),
+                specialty=request.form.get('specialty'),
+                appointment_date=datetime.strptime(request.form.get('appointment_date'), '%Y-%m-%d'),
+                appointment_time=request.form.get('appointment_time'),
+                location=request.form.get('location'),
+                notes=request.form.get('notes')
+            )
+            db.session.add(apt)
+            db.session.commit()
+            flash('Appointment scheduled!', 'success')
+            return redirect(url_for('appointments'))
+        
+        appointments_list = Appointment.query.filter_by(user_id=current_user.id).order_by(Appointment.appointment_date).all()
+        return render_template('appointments.html', appointments=appointments_list)
+
+    @app.route('/appointment/delete/<int:appointment_id>', methods=['POST'])
+    @login_required
+    def delete_appointment(appointment_id):
+        apt = Appointment.query.get_or_404(appointment_id)
+        if apt.user_id == current_user.id:
+            db.session.delete(apt)
+            db.session.commit()
+            flash('Appointment cancelled.', 'success')
+        return redirect(url_for('appointments'))
+
+    @app.route('/bp-tracker', methods=['GET', 'POST'])
+    @login_required
+    def bp_tracker():
+        if request.method == 'POST':
+            pulse = request.form.get('pulse')
+            reading = BloodPressure(
+                user_id=current_user.id,
+                systolic=int(request.form.get('systolic')),
+                diastolic=int(request.form.get('diastolic')),
+                pulse=int(pulse) if pulse else None,
+                reading_date=datetime.strptime(request.form.get('reading_date'), '%Y-%m-%d'),
+                notes=request.form.get('notes')
+            )
+            db.session.add(reading)
+            db.session.commit()
+            flash('Blood pressure reading saved!', 'success')
+            return redirect(url_for('bp_tracker'))
+        
+        readings = BloodPressure.query.filter_by(user_id=current_user.id).order_by(BloodPressure.reading_date.desc()).all()
+        today = datetime.now().strftime('%Y-%m-%d')
+        return render_template('bp_tracker.html', readings=readings, today=today)
+
+    @app.route('/bp-reading/delete/<int:reading_id>', methods=['POST'])
+    @login_required
+    def delete_bp_reading(reading_id):
+        reading = BloodPressure.query.get_or_404(reading_id)
+        if reading.user_id == current_user.id:
+            db.session.delete(reading)
+            db.session.commit()
+            flash('Reading deleted.', 'success')
+        return redirect(url_for('bp_tracker'))
+
+    @app.route('/wellness')
+    def wellness():
+        category = request.args.get('category')
+        if category:
+            tips = WellnessTip.query.filter_by(category=category).all()
+        else:
+            tips = WellnessTip.query.all()
+        return render_template('wellness.html', tips=tips, current_category=category)
 
     @app.errorhandler(404)
     def page_not_found(e):
