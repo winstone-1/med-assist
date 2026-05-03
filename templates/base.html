@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}MedAssist{% endblock %}</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
 
   <!-- Disclaimer Banner -->
   <div class="disclaimer-banner text-center py-2 small fw-semibold">
-    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+    <i class="fa-solid fa-triangle-exclamation me-1"></i>
     MedAssist is for informational purposes only — not a substitute for professional medical advice.
     <a href="{{ url_for('disclaimer') }}" class="text-dark ms-1 fw-bold">Learn more</a>
   </div>
@@ -21,7 +21,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-teal shadow-sm">
     <div class="container">
       <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
-        <i class="bi bi-heart-pulse-fill me-2"></i>MedAssist
+        <i class="fa-solid fa-heart-pulse me-2"></i>MedAssist
       </a>
       <button class="navbar-toggler border-0" type="button"
               data-bs-toggle="collapse" data-bs-target="#navMenu">
@@ -31,17 +31,22 @@
         <ul class="navbar-nav me-auto ms-3">
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('symptom_form') }}">
-              <i class="bi bi-search-heart me-1"></i>Symptom Checker
+              <i class="fa-solid fa-stethoscope me-1"></i>Symptom Checker
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('firstaid_list') }}">
-              <i class="bi bi-bandaid me-1"></i>First Aid
+              <i class="fa-solid fa-kit-medical me-1"></i>First Aid
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('bmi_calculator') }}">
+              <i class="fa-solid fa-weight-scale me-1"></i>BMI Calculator
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('emergency') }}">
-              <i class="bi bi-telephone-fill me-1"></i>Emergency
+              <i class="fa-solid fa-phone me-1"></i>Emergency
             </a>
           </li>
         </ul>
@@ -49,24 +54,30 @@
           {% if current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('dashboard') }}">
-              <i class="bi bi-person-circle me-1"></i>{{ current_user.username }}
+              <i class="fa-solid fa-circle-user me-1"></i>{{ current_user.username }}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('profile') }}">
+              <i class="fa-solid fa-gear me-1"></i>Profile
             </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('logout') }}">
-              <i class="bi bi-box-arrow-right me-1"></i>Logout
+              <i class="fa-solid fa-right-from-bracket me-1"></i>Logout
             </a>
           </li>
           {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('login') }}">
-              <i class="bi bi-box-arrow-in-right me-1"></i>Login
+              <i class="fa-solid fa-right-to-bracket me-1"></i>Login
             </a>
           </li>
           <li class="nav-item ms-2">
-            <a class="btn btn-light btn-sm px-3 fw-semibold text-teal"
+            <a class="btn btn-light btn-sm px-3 fw-semibold"
+               style="color: var(--teal);"
                href="{{ url_for('register') }}">
-              Sign Up
+              Sign Up Free
             </a>
           </li>
           {% endif %}
@@ -94,31 +105,39 @@
     {% block content %}{% endblock %}
   </main>
 
+  <!-- Back to top button -->
+  <button id="backToTop" class="btn btn-teal rounded-circle shadow"
+          style="position:fixed;bottom:2rem;right:2rem;width:45px;height:45px;display:none;z-index:999;">
+    <i class="fa-solid fa-chevron-up"></i>
+  </button>
+
   <!-- Footer -->
   <footer class="text-light text-center py-4 small">
     <div class="container">
-      <p class="mb-1 fw-semibold">
-        <i class="bi bi-heart-pulse-fill text-danger me-1"></i>MedAssist
+      <p class="mb-1 fw-semibold fs-6">
+        <i class="fa-solid fa-heart-pulse text-danger me-1"></i>MedAssist
       </p>
       <p class="text-secondary mb-2">
         Educational capstone project — KCA University BSD 2026
       </p>
       <div class="d-flex justify-content-center gap-3">
-        <a href="{{ url_for('disclaimer') }}" class="text-warning small">
-          Medical Disclaimer
-        </a>
-        <a href="{{ url_for('emergency') }}" class="text-danger small">
-          Emergency Contacts
-        </a>
-        <a href="{{ url_for('firstaid_list') }}" class="text-info small">
-          First Aid Library
-        </a>
+        <a href="{{ url_for('disclaimer') }}" class="text-warning small">Medical Disclaimer</a>
+        <a href="{{ url_for('emergency') }}" class="text-danger small">Emergency Contacts</a>
+        <a href="{{ url_for('firstaid_list') }}" class="text-info small">First Aid Library</a>
       </div>
     </div>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ url_for('static', filename='js/severity_colors.js') }}"></script>
+  <script>
+    // Back to top
+    const btn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+    });
+    btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
   {% block scripts %}{% endblock %}
 
 </body>
