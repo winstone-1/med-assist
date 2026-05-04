@@ -5,7 +5,7 @@ import traceback
 try:
     from models import db, User, SymptomHistory, Question, FirstAidGuide, \
         MedicationReminder, HealthJournal, Appointment, BloodPressure, WellnessTip
-    from symptom_matcher import match_symptoms, get_severity_label
+    from symptom_matcher import match_symptoms, get_severity_label, check_pre_eclampsia
     from api_client import get_drug_warnings
     from session_manager import save_answer, get_answers, clear_session, set_current_step
 except Exception as e:
@@ -25,7 +25,7 @@ from models import (
     db, User, SymptomHistory, Question, FirstAidGuide,
     MedicationReminder, HealthJournal, Appointment, BloodPressure, WellnessTip
 )
-from symptom_matcher import match_symptoms, get_severity_label
+from symptom_matcher import match_symptoms, get_severity_label, check_pre_eclampsia
 from api_client import get_drug_warnings
 from session_manager import (
     save_answer, get_answers,
@@ -167,7 +167,12 @@ def create_app():
                 return redirect(url_for('symptom_form', step=step + 1))
             return redirect(url_for('results'))
 
-        question = questions[step - 1] if questions else None
+        # If no questions in DB, show error
+        if not questions:
+            flash('No symptom questions found. Please run seed.py to initialize the database.', 'warning')
+            return render_template('symptom_form.html', question=None, step=1, total=0)
+
+        question = questions[step - 1] if step <= total else None
         return render_template(
             'symptom_form.html',
             question=question,
@@ -177,17 +182,37 @@ def create_app():
 
     @app.route('/results')
     def results():
-        answers    = get_answers()
+        answers = get_answers()
+        
+        # Debug: print answers to console
+        print(f"[DEBUG] Answers received: {answers}")
+        
+        # Get matching conditions
         conditions = match_symptoms(answers)
-
+        
+        # SPECIAL CHECK: Pre-eclampsia for pregnant women
+        pre_eclampsia_result = check_pre_eclampsia(answers)
+        if pre_eclampsia_result:
+            print("[DEBUG] Pre-eclampsia detected! Adding to top of results.")
+            # Insert at the beginning (highest priority)
+            conditions.insert(0, pre_eclampsia_result)
+        
+        # Add severity info to each condition
         for item in conditions:
             item['severity_info'] = get_severity_label(item['severity'])
-
+        
+        # Add drug warnings for top 3 conditions
         for item in conditions[:3]:
-            item['drug_warnings'] = get_drug_warnings(item['condition'].name)
-
+            try:
+                item['drug_warnings'] = get_drug_warnings(item['condition'].name)
+            except Exception as e:
+                print(f"[DEBUG] Drug warning error: {e}")
+                item['drug_warnings'] = []
+        
+        # Check if any emergency conditions
         has_emergency = any(i['severity'] == 'emergency' for i in conditions)
-
+        
+        # Save to history if user is logged in
         if current_user.is_authenticated and conditions:
             results_data = [
                 {
@@ -204,7 +229,11 @@ def create_app():
             )
             db.session.add(history)
             db.session.commit()
-
+        
+        # If no conditions matched, show a helpful message
+        if not conditions:
+            flash('No conditions matched your symptoms. Try selecting more symptoms or consult a healthcare professional.', 'info')
+        
         return render_template(
             'results.html',
             conditions=conditions,
@@ -214,6 +243,7 @@ def create_app():
     @app.route('/clear')
     def clear():
         clear_session()
+        flash('Symptom checker session cleared.', 'info')
         return redirect(url_for('symptom_form'))
 
     @app.route('/first-aid')

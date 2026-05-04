@@ -26,6 +26,26 @@ USER_SEVERITY_WEIGHT = {
 }
 
 
+# Pregnancy-specific symptom mapping (for when q_1 is dynamic)
+PREGNANCY_SYMPTOMS_MAP = {
+    'severe headache': 'severe-headache',
+    'headache': 'headache',
+    'sudden swelling': 'sudden-swelling',
+    'swelling face': 'swelling-face',
+    'swelling hands': 'swelling-hands',
+    'vision changes': 'vision-changes',
+    'blurred vision': 'blurred-vision',
+    'spots in vision': 'spots-in-vision',
+    'decreased fetal movement': 'decreased-fetal-movement',
+    'nausea': 'nausea',
+    'vomiting': 'vomiting',
+    'dizziness': 'dizziness',
+    'fatigue': 'fatigue',
+    'abdominal pain': 'abdominal-pain',
+    'upper right abdominal pain': 'upper-right-abdominal-pain',
+}
+
+
 def parse_answers(answers: dict) -> dict:
     """
     Parse raw session answers into structured data.
@@ -35,30 +55,54 @@ def parse_answers(answers: dict) -> dict:
     duration       = None
     severity_level = None
     risk_factors   = []
+    weeks_pregnant = None
 
     for key, value in answers.items():
         if not value:
             continue
 
-        # question 1 — symptoms (checkbox, comma separated)
-        if key == 'q_1':
-            values = value if isinstance(value, list) else value.split(',')
+        # Handle all question types (q_1, q_2, q_3, q_4, or dynamic q_id)
+        # Convert value to list if it's a string with commas
+        if isinstance(value, str) and ',' in value and 'checkbox' in str(key):
+            value = [v.strip() for v in value.split(',')]
+
+        # SYMPTOMS - Question 1 or any checkbox with symptom names
+        if key == 'q_1' or (key.startswith('q_') and 'symptom' in str(value).lower()) or 'checkbox' in str(key):
+            values = value if isinstance(value, list) else [value]
             for v in values:
-                slug = v.strip().lower().replace(' ', '-')
+                v_clean = v.strip().lower()
+                # Map to slug
+                slug = PREGNANCY_SYMPTOMS_MAP.get(v_clean, v_clean.replace(' ', '-'))
                 symptom_slugs.add(slug)
 
-        # question 2 — duration (radio)
-        elif key == 'q_2':
+        # DURATION - Question 2
+        elif key == 'q_2' or 'duration' in key.lower() or 'long' in key.lower():
             duration = value.strip()
 
-        # question 3 — severity self-assessment (radio)
-        elif key == 'q_3':
+        # SEVERITY - Question 3
+        elif key == 'q_3' or 'severity' in key.lower():
             severity_level = value.strip()
 
-        # question 4 — risk factors (checkbox)
-        elif key == 'q_4':
-            values = value if isinstance(value, list) else value.split(',')
-            risk_factors = [v.strip() for v in values]
+        # RISK FACTORS - Question 4 (pregnancy, age, etc.)
+        elif key == 'q_4' or 'risk' in key.lower() or 'pregnant' in key.lower():
+            values = value if isinstance(value, list) else [value]
+            for v in values:
+                v_clean = v.strip()
+                risk_factors.append(v_clean)
+                if 'pregnant' in v_clean.lower():
+                    # Check if weeks were provided elsewhere
+                    pass
+
+        # Pregnancy weeks (custom field)
+        elif 'weeks' in key.lower() or 'pregnancy' in key.lower():
+            try:
+                weeks_pregnant = int(value)
+            except:
+                pass
+
+    # If pregnant, add pregnancy as a risk factor
+    if weeks_pregnant or 'pregnant' in str(risk_factors).lower():
+        risk_factors.append('Pregnant')
 
     return {
         'symptom_slugs':  symptom_slugs,
@@ -86,14 +130,25 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
     severity_level = parsed['severity_level']
     risk_factors   = parsed['risk_factors']
 
+    # Debug print to see what's being passed
+    print(f"[DEBUG] Symptom slugs: {symptom_slugs}")
+    print(f"[DEBUG] Duration: {duration}")
+    print(f"[DEBUG] Severity: {severity_level}")
+    print(f"[DEBUG] Risk factors: {risk_factors}")
+
     if not symptom_slugs:
+        print("[DEBUG] No symptoms found - returning empty list")
         return []
 
     conditions = Condition.query.all()
+    print(f"[DEBUG] Total conditions in DB: {len(conditions)}")
+    
     results    = []
 
     for cond in conditions:
         cond_slugs = {s.slug for s in cond.symptoms}
+        
+        print(f"[DEBUG] Condition: {cond.name}, slugs: {cond_slugs}")
 
         if not cond_slugs:
             continue
@@ -101,6 +156,8 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
         # ── Base score: symptom overlap ──────────────────────────────────────
         matched     = cond_slugs & symptom_slugs
         base_score  = len(matched) / len(cond_slugs)
+
+        print(f"[DEBUG] Matched: {matched}, base_score: {base_score}")
 
         if base_score < threshold:
             continue
@@ -114,7 +171,11 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
         # ── Risk factor bonus ────────────────────────────────────────────────
         risk_bonus = 0.0
         if risk_factors and 'None of the above' not in risk_factors:
-            risk_bonus = 0.1 * len(risk_factors)
+            # Higher bonus for pregnancy risk
+            if 'Pregnant' in risk_factors:
+                risk_bonus = 0.3
+            else:
+                risk_bonus = 0.1 * len(risk_factors)
 
         # ── Final score ──────────────────────────────────────────────────────
         final_score = (base_score * duration_mod * severity_mod) + risk_bonus
@@ -134,6 +195,7 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
         -SEVERITY_WEIGHT.get(x['severity'], 0)
     ))
 
+    print(f"[DEBUG] Final results count: {len(results)}")
     return results
 
 
@@ -148,3 +210,42 @@ def get_severity_label(severity: str) -> dict:
         'emergency': {'label': 'Emergency', 'color': 'danger',  'icon': '🔴'},
     }
     return labels.get(severity, {'label': severity, 'color': 'secondary', 'icon': '⚪'})
+
+
+# Pre-eclampsia specific check (for high accuracy)
+def check_pre_eclampsia(answers: dict) -> dict:
+    """
+    Special check for pre-eclampsia in pregnant women.
+    Returns emergency result if symptoms match.
+    """
+    parsed = parse_answers(answers)
+    symptom_slugs = parsed['symptom_slugs']
+    risk_factors = parsed['risk_factors']
+    
+    # Pre-eclampsia key symptoms
+    pre_eclampsia_symptoms = {
+        'severe-headache', 'vision-changes', 'blurred-vision', 
+        'spots-in-vision', 'sudden-swelling', 'swelling-face',
+        'swelling-hands', 'upper-right-abdominal-pain'
+    }
+    
+    # Check if pregnant and has key symptoms
+    is_pregnant = 'Pregnant' in risk_factors or any('pregnant' in str(r).lower() for r in risk_factors)
+    has_key_symptoms = len(pre_eclampsia_symptoms & symptom_slugs) >= 2
+    
+    if is_pregnant and has_key_symptoms:
+        from models import Condition
+        pre_eclampsia = Condition.query.filter(
+            Condition.name.ilike('%pre-eclampsia%')
+        ).first()
+        
+        if pre_eclampsia:
+            return {
+                'condition': pre_eclampsia,
+                'base_score': 0.95,
+                'final_score': 1.5,
+                'matched': list(pre_eclampsia_symptoms & symptom_slugs),
+                'severity': 'emergency',
+                'guide': pre_eclampsia.firstaid_guide
+            }
+    return None

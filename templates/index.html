@@ -83,6 +83,57 @@
   </div>
 </section>
 
+<!-- Toast Container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100">
+  <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+    <div class="toast-header bg-success text-white">
+      <i class="fa-solid fa-circle-check me-2"></i>
+      <strong class="me-auto">Success</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="successToastBody">
+      Operation completed successfully!
+    </div>
+  </div>
+
+  <div id="errorToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+    <div class="toast-header bg-danger text-white">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>
+      <strong class="me-auto">Error</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="errorToastBody">
+      Something went wrong. Please try again.
+    </div>
+  </div>
+
+  <div id="infoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="4000">
+    <div class="toast-header bg-info text-white">
+      <i class="fa-solid fa-circle-info me-2"></i>
+      <strong class="me-auto">Information</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="infoToastBody">
+      Here's some helpful information.
+    </div>
+  </div>
+
+  <div id="warningToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="6000">
+    <div class="toast-header bg-warning text-dark">
+      <i class="fa-solid fa-triangle-exclamation me-2"></i>
+      <strong class="me-auto">Warning</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="warningToastBody">
+      Please proceed with caution.
+    </div>
+  </div>
+</div>
+
 <!-- Features Section - Redesigned -->
 <section class="features-section py-5">
   <div class="container">
@@ -116,7 +167,7 @@
           </div>
           <h5 class="fw-bold mt-3">Live Drug Data</h5>
           <p class="text-muted">Real-time drug warnings and information from OpenFDA database.</p>
-          <a href="{{ url_for('symptom_form') }}" class="feature-link">
+          <a href="#" class="feature-link" onclick="showInfoToast('Drug database coming soon!'); return false;">
             Learn More <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -144,7 +195,7 @@
           </div>
           <h5 class="fw-bold mt-3">Appointment Scheduler</h5>
           <p class="text-muted">Never miss a doctor's appointment with our smart scheduler.</p>
-          <a href="{{ url_for('appointments') }}" class="feature-link">
+          <a href="#" class="feature-link" onclick="showInfoToast('Appointment scheduler coming soon!'); return false;">
             Schedule <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -158,7 +209,7 @@
           </div>
           <h5 class="fw-bold mt-3">BP Tracker</h5>
           <p class="text-muted">Monitor your blood pressure and track trends over time.</p>
-          <a href="{{ url_for('bp_tracker') }}" class="feature-link">
+          <a href="#" class="feature-link" onclick="showInfoToast('BP Tracker coming soon!'); return false;">
             Track Now <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -172,7 +223,7 @@
           </div>
           <h5 class="fw-bold mt-3">Wellness Tips</h5>
           <p class="text-muted">Evidence-based health tips to improve your wellbeing.</p>
-          <a href="{{ url_for('wellness') }}" class="feature-link">
+          <a href="#" class="feature-link" onclick="showInfoToast('Daily wellness tips coming soon!'); return false;">
             Read More <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -233,15 +284,9 @@
       </div>
       <h3 class="fw-bold mb-3">Ready to take control of your health?</h3>
       <p class="mb-4">Join thousands of users who trust MedAssist for their health decisions.</p>
-      {% if not current_user.is_authenticated %}
-      <a href="{{ url_for('register') }}" class="btn btn-light btn-lg px-5">
-        <i class="fa-solid fa-user-plus me-2"></i>Create Free Account
-      </a>
-      {% else %}
       <a href="{{ url_for('symptom_form') }}" class="btn btn-light btn-lg px-5">
         <i class="fa-solid fa-stethoscope me-2"></i>Start Symptom Check
       </a>
-      {% endif %}
     </div>
   </div>
 </section>
@@ -266,5 +311,54 @@
     </div>
   </div>
 </div>
+
+<!-- Toast Notification JavaScript -->
+<script>
+// Toast notification functions
+function showSuccessToast(message) {
+    const toastEl = document.getElementById('successToast');
+    const toastBody = document.getElementById('successToastBody');
+    if (toastEl && toastBody) {
+        toastBody.textContent = message || 'Operation completed successfully!';
+        const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+        toast.show();
+    }
+}
+
+function showErrorToast(message) {
+    const toastEl = document.getElementById('errorToast');
+    const toastBody = document.getElementById('errorToastBody');
+    if (toastEl && toastBody) {
+        toastBody.textContent = message || 'Something went wrong. Please try again.';
+        const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+        toast.show();
+    }
+}
+
+function showInfoToast(message) {
+    const toastEl = document.getElementById('infoToast');
+    const toastBody = document.getElementById('infoToastBody');
+    if (toastEl && toastBody) {
+        toastBody.textContent = message || 'Here\'s some helpful information.';
+        const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+        toast.show();
+    }
+}
+
+function showWarningToast(message) {
+    const toastEl = document.getElementById('warningToast');
+    const toastBody = document.getElementById('warningToastBody');
+    if (toastEl && toastBody) {
+        toastBody.textContent = message || 'Please proceed with caution.';
+        const toast = new bootstrap.Toast(toastEl, { delay: 6000 });
+        toast.show();
+    }
+}
+
+// Display welcome toast when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    showInfoToast('Welcome to MedAssist! Your health companion is ready.');
+});
+</script>
 
 {% endblock %}
