@@ -1,3 +1,5 @@
 #!/bin/bash
+echo "Running seed..."
 python seed.py
-gunicorn app:app --bind 0.0.0.0:5000 --workers 1 --log-level debug 2>&1
+echo "Starting gunicorn..."
+exec gunicorn app:app --workers 1 --bind 0.0.0.0:${PORT:-5000} --log-level info
