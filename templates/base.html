@@ -12,26 +12,29 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/dark-theme.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
   <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+  
   <!-- Firebase Configuration -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-<script>
-  // Firebase configuration - REPLACE WITH YOUR OWN FROM FIREBASE CONSOLE
- const firebaseConfig = {
-  apiKey: "AIzaSyCjfYW5zF1CFOFEtdlwujF5TuzGK8mDLPU",
-  authDomain: "med-assist-55fd8.firebaseapp.com",
-  projectId: "med-assist-55fd8",
-  storageBucket: "med-assist-55fd8.firebasestorage.app",
-  messagingSenderId: "253409471998",
-  appId: "1:253409471998:web:f2442c1c1368f4ddb964af",
-  measurementId: "G-G6P2DP1KZH"
-};
+  <script>
+    // Firebase configuration - YOUR ACTUAL CONFIG
+    const firebaseConfig = {
+      apiKey: "AIzaSyCjfYW5zF1CFOFEtdlwujF5TuzGK8mDLPU",
+      authDomain: "med-assist-55fd8.firebaseapp.com",
+      projectId: "med-assist-55fd8",
+      storageBucket: "med-assist-55fd8.firebasestorage.app",
+      messagingSenderId: "253409471998",
+      appId: "1:253409471998:web:f2442c1c1368f4ddb964af",
+      measurementId: "G-G6P2DP1KZH"
+    };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-</script>
+    // Initialize Firebase correctly
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+      console.log("Firebase initialized successfully");
+    }
+  </script>
 </head>
 <body>
 
