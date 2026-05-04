@@ -1,6 +1,16 @@
 # app.py
 import os
 import json
+import traceback
+try:
+    from models import db, User, SymptomHistory, Question, FirstAidGuide, \
+        MedicationReminder, HealthJournal, Appointment, BloodPressure, WellnessTip
+    from symptom_matcher import match_symptoms, get_severity_label
+    from api_client import get_drug_warnings
+    from session_manager import save_answer, get_answers, clear_session, set_current_step
+except Exception as e:
+    traceback.print_exc()
+    raise
 from flask import (
     Flask, render_template, request,
     session, redirect, url_for, flash
