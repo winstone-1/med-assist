@@ -272,7 +272,7 @@ def create_app():
             db.session.commit()
             flash('Medication reminder added!', 'success')
             return redirect(url_for('medications'))
-        
+
         reminders = MedicationReminder.query.filter_by(user_id=current_user.id).all()
         return render_template('medications.html', reminders=reminders)
 
@@ -301,7 +301,7 @@ def create_app():
             db.session.commit()
             flash('Journal entry saved!', 'success')
             return redirect(url_for('journal'))
-        
+
         entries = HealthJournal.query.filter_by(user_id=current_user.id).order_by(HealthJournal.entry_date.desc()).all()
         today = datetime.now().strftime('%Y-%m-%d')
         return render_template('journal.html', entries=entries, today=today)
@@ -333,7 +333,7 @@ def create_app():
             db.session.commit()
             flash('Appointment scheduled!', 'success')
             return redirect(url_for('appointments'))
-        
+
         appointments_list = Appointment.query.filter_by(user_id=current_user.id).order_by(Appointment.appointment_date).all()
         return render_template('appointments.html', appointments=appointments_list)
 
@@ -364,7 +364,7 @@ def create_app():
             db.session.commit()
             flash('Blood pressure reading saved!', 'success')
             return redirect(url_for('bp_tracker'))
-        
+
         readings = BloodPressure.query.filter_by(user_id=current_user.id).order_by(BloodPressure.reading_date.desc()).all()
         today = datetime.now().strftime('%Y-%m-%d')
         return render_template('bp_tracker.html', readings=readings, today=today)
@@ -395,9 +395,9 @@ def create_app():
         email = data.get('email')
         name = data.get('name')
         google_id = data.get('google_id')
-        
+
         user = User.query.filter_by(email=email).first()
-        
+
         if not user:
             username = name.replace(' ', '').lower() + str(int(datetime.now().timestamp()))[-4:]
             user = User(
@@ -407,7 +407,7 @@ def create_app():
             )
             db.session.add(user)
             db.session.commit()
-        
+
         login_user(user)
         return json.dumps({'success': True})
 
