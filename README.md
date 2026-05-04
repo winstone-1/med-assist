@@ -1,124 +1,153 @@
-# MedAssist - Symptom Checker & First Aid Guide
+# MedAssist – Symptom Checker & First Aid Guide
 
-[Flask] [Python 3.9] [SQLite] [Bootstrap 5] [OpenFDA API]
+## Project Explanation
+MedAssist is a Flask-based web application that helps users identify possible health conditions by answering a multi-step questionnaire about their symptoms. The app suggests matching conditions with severity indicators (Low → Medium → Emergency) and provides downloadable first aid guides for common injuries like burns, cuts, choking, and sprains. A prominent medical disclaimer emphasizes that this is an educational tool only, not a substitute for professional medical advice.
 
-**A comprehensive healthcare web application for symptom assessment and first aid guidance**
+## UI Technology
+- **Flask** – Python web framework handling routes, requests, and server-side logic
+- **Jinja2 Templates** – HTML templating with template inheritance (`base.html` extended by all pages)
+- **Bootstrap 5** – Responsive CSS framework for styling, modals, and navigation
+- **JavaScript (vanilla)** – Form validation, dynamic severity color coding, and PDF trigger buttons
 
----
+## Database
+- **SQLite** with **SQLAlchemy ORM** – Lightweight, serverless database perfect for prototyping
+- **Tables:**
+  - `Question` – Stores multi-step symptom questions and options
+  - `Condition` – Medical conditions with severity levels and recommendations
+  - `Symptom` – Individual symptoms linked to conditions
+  - `SymptomCondition` – Junction table linking symptoms to conditions with weight scores
+  - `FirstAidGuide` – First aid content with title, steps, category, and emergency warnings
 
-## Disclaimer
+## Python Concepts Implemented
 
-> **IMPORTANT:** This application is for educational and informational purposes only. It does not constitute medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional. If you are experiencing a medical emergency, call 999 or 112 immediately.
+| Concept | How It's Used in MedAssist |
+|---------|----------------------------|
+| **Flask Routes & HTTP Methods** | `@app.route()` decorators with GET (display forms) and POST (process symptom answers, send messages) |
+| **Jinja2 Templating** | Template inheritance (`{% extends "base.html" %}`), conditionals (`{% if severity == 'high' %}`), loops (`{% for condition in conditions %}`), and filters (`{{ timestamp|datetime }}`) |
+| **SQLAlchemy ORM** | Defining database models as Python classes, establishing relationships (`db.relationship`), querying (`Condition.query.filter_by(severity='high').all()`) |
+| **Session Management** | Storing symptom answers across the multi-step form using Flask's `session` dictionary (`session['answers'] = {'headache': True}`) |
+| **Request/Response Handling** | Accessing form data via `request.form.get()` or JSON via `request.get_json()`, returning `render_template()` or `redirect()` or `jsonify()` |
+| **Conditional Logic & Decision Tree** | Matching user symptoms to conditions using if/elif chains or weighted scoring algorithm (`if 'fever' in symptoms and 'cough' in symptoms: return 'Common Cold'`) |
+| **Error Handling** | Try/except blocks for PDF generation failures, API call timeouts (if integrated), database connection errors, and file I/O operations |
+| **File Handling & PDF Export** | Generating PDFs using WeasyPrint/ReportLab with `render_template()` for HTML-to-PDF conversion, saving to `/exports` folder, sending as downloadable response with `send_file()` |
+| **Environment Variables** | Storing Flask `SECRET_KEY` and any API keys (Infermedica, Google Places, Twilio) in a `.env` file loaded via `python-dotenv` |
+| **Functions & Modularity** | Creating reusable functions like `match_symptoms(symptoms_list)`, `generate_pdf(guide_id)`, `cache_api_response()`, and `send_sms_alert()` for clean, testable code |
+| **Decorators** | Custom `@login_required` decorator (if user authentication added) and Flask's built-in `@app.before_request` for global actions like enforcing disclaimer acceptance |
+| **List & Dictionary Comprehensions** | Efficiently filtering conditions: `[c for c in conditions if c.severity == 'high']` or building symptom option dicts from database queries |
+| **JSON Parsing** | If integrating external APIs (Infermedica, OpenFDA), using `response.json()` to parse API responses and extract condition names, drug info, or hospital locations |
 
----
+## Screenshots
 
-## Table of Contents
+<!-- Add your screenshots here. Replace the placeholder paths with actual image paths -->
 
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Severity System](#severity-system)
-- [Project Structure](#project-structure)
-- [Database Schema](#database-schema)
-- [Setup Instructions](#setup-instructions)
-- [Testing](#testing)
-- [API Integration](#api-integration)
-- [Deployment](#deployment)
-- [Development History](#development-history)
+### Homepage / Landing Page
+![Homepage](assets/Homepage.png)
 
----
-
-## Features
-
-| Category | Features |
-|----------|----------|
-| Symptom Checker | Multi-step questionnaire with session management |
-| | Rule-based scoring engine matching symptoms to conditions |
-| | Severity rating (Low, Moderate, Urgent, Emergency) |
-| Drug Information | Live drug warnings via OpenFDA API |
-| | Drug interaction checker |
-| First Aid | Comprehensive guide library with step-by-step instructions |
-| | Print functionality for guides |
-| User System | Registration, login, logout |
-| | Symptom history dashboard |
-| | Personal profile page |
-| Tools | BMI calculator with health categories |
-| UI/UX | Severity color coding across all pages |
-| | Responsive Bootstrap 5 design |
-| | Medical disclaimer on every page |
-| Emergency | Emergency contacts page with Kenya hotlines |
-| Error Handling | Custom 404 error page |
-| Development | Jupyter Notebooks for data analysis |
-| | Unit and integration tests |
-
----
-
-## Technology Stack
-
-**Environment & Backend**
-- Anaconda / Python 3.9
-- Flask 3.0.3 (Application framework)
-- Flask-Login (Authentication)
-- Flask-Bcrypt (Password hashing)
-- Flask-SQLAlchemy (ORM)
-
-**Database**
-- SQLite (Development)
-- SQLAlchemy (Database abstraction)
-
-**Frontend**
-- Bootstrap 5 (Responsive framework)
-- Font Awesome 6 (Icons)
-- Jinja2 (Templating)
-- Custom CSS/JS
-
-**APIs & External Services**
-- OpenFDA Drug Label API
-
-**Development & Testing**
-- Jupyter Notebook (Analysis)
-- pandas, matplotlib (Data visualization)
-- pytest, pytest-flask (Testing)
-- Git (Version control)
-
----
-
-## Severity System
-
-| Level | Color | Meaning | Action Required |
-|-------|-------|---------|-----------------|
-| Low | Green | Minor, self-treatable condition | Home care |
-| Moderate | Amber | Monitor symptoms | See doctor if no improvement |
-| Urgent | Orange | Medical attention needed | Seek care today |
-| Emergency | Red | Critical situation | Call emergency services immediately |
-
----
+### Multi-Step Symptom Questionnaire
+![Symptom Form](assets/Symptomchecker.png)
 
 
----
 
-## Database Schema
+### First Aid Guides Library
+![First Aid List](assets/Firstaid.png)
 
-| Table | Description |
-|-------|-------------|
-| `user` | Registered users with hashed passwords |
-| `symptom_history` | Saved symptom check results per user |
-| `symptom` | Individual symptoms with slugs and body areas |
-| `condition` | Medical conditions with severity levels |
-| `symptom_condition` | Many-to-many junction table |
-| `question` | Questionnaire questions with JSON options |
-| `firstaid_guide` | Step-by-step first aid guides |
-| `user_session` | Session tokens for anonymous tracking |
+### First Aid Guide Detail with PDF Export
+![First Aid Detail](assets/Firstaiddetail.png)
 
----
+### Emergency Page
+![Emergency Page](assets/Emergency.png)
 
-## Setup Instructions
+
+## Flask Routes & UI Pages
+
+| Route | Method | Template | Description |
+|-------|--------|----------|-------------|
+| `/` | GET | `index.html` | Landing page with app overview and start button |
+| `/symptom/start` | GET | `symptom_form.html` | Begins multi-step symptom questionnaire |
+| `/symptom/step/<int:step_id>` | GET/POST | `symptom_form.html` | Each question step with back/next navigation |
+| `/symptom/results` | POST | `results.html` | Displays matched conditions with severity colors |
+| `/firstaid` | GET | `firstaid_list.html` | Browse all first aid guides with search |
+| `/firstaid/<slug>` | GET | `firstaid_detail.html` | Full guide content with PDF export button |
+| `/firstaid/<slug>/pdf` | GET | - | Downloads PDF version of the guide |
+| `/emergency` | GET | `emergency.html` | Emergency numbers and when to call 911 |
+| `/disclaimer` | GET | `disclaimer.html` | Full medical disclaimer page |
+
+## Development Roadmap (Checklist)
+
+### Day 1 – Setup & Database
+- [ ] Create Anaconda environment (`conda create -n medassist python=3.9`)
+- [ ] Install Flask, SQLAlchemy, Jinja2, WeasyPrint
+- [ ] Create project folder structure
+- [ ] Design SQLite database schema (models.py)
+- [ ] Create `seed.py` to populate initial symptoms, conditions, first aid guides
+- [ ] Test database connection in Jupyter notebook
+
+### Day 2 – Backend Logic
+- [ ] Build symptom matching decision tree (`symptom_matcher.py`)
+- [ ] Implement weighted scoring algorithm for condition matching
+- [ ] Create Flask routes for symptom questionnaire (GET/POST)
+- [ ] Set up session management for multi-step form
+- [ ] Test matching logic with sample inputs
+- [ ] Write unit tests for `test_matcher.py`
+
+### Day 3 – Templates & UI
+- [ ] Create `base.html` with Bootstrap 5, navbar, footer, disclaimer
+- [ ] Build `symptom_form.html` with multi-step Jinja2 form
+- [ ] Create `results.html` to display matched conditions + severity colors
+- [ ] Build `firstaid_list.html` and `firstaid_detail.html`
+- [ ] Add client-side validation with JavaScript
+- [ ] Implement severity color coding (green/yellow/red)
+
+### Day 4 – Final Features & Testing
+- [ ] Implement PDF export functionality (WeasyPrint)
+- [ ] Create `emergency.html` with emergency contacts
+- [ ] Add search/filter for first aid guides
+- [ ] Run Jupyter notebooks for testing & analysis
+- [ ] Write integration tests for all routes
+- [ ] Final debugging and documentation cleanup
+- [ ] Prepare demo video / screenshots
+
+### Bonus Features
+- [ ] Add user authentication (login/signup)
+- [ ] Save symptom history per user
+- [ ] Integrate free API (OpenFDA drug lookup)
+- [ ] Add "email first aid guide" feature
+
+## Setup Instructions (Conda Environment)
 
 ### Prerequisites
-- Anaconda or Miniconda installed
-- Git installed
+- **Anaconda Distribution** (Download from [anaconda.com](https://www.anaconda.com/download))
+- Modern web browser (Chrome, Firefox, Edge)
 
-### 1. Clone the Repository
+### Step 1: Clone or Download the Project
+
 ```bash
-git clone <your-repo-url>
-cd med-assist
+git clone https://github.com/winstone-1/medassist.git
+cd medassist
+
+**2. Create and activate a virtual Anaconda environment**
+
+```bash
+py -3.13 -m venv venv
+
+conda create -n medassist python=3.9
 ```
+
+**3. Install dependencies**
+
+```bash
+conda install flask flask-sqlalchemy flask-session
+conda install jupyter notebook
+conda install weasyprint
+conda install pandas matplotlib
+pip install python-dotenv
+```
+
+---
+## Author
+
+Winstone Mwangi
+
+## License
+
+MIT License. See LICENSE for details.
