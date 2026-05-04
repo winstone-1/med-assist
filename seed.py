@@ -1,12 +1,3 @@
-# Add this at the beginning of seed() function
-def seed():
-    with app.app_context():
-        # Skip if already seeded
-        if Symptom.query.count() > 0:
-            print("✅ Database already seeded. Skipping.")
-            return
-        
-        # Your existing seeding code below...
 # seed.py
 import json
 import os
@@ -47,8 +38,9 @@ SYMPTOMS = [
     {'name': 'Eye Redness', 'slug': 'eye-redness', 'body_area': 'head', 'description': 'Red or irritated eyes'},
 ]
 
-# ── Conditions ────────────────────────────────────────────────────────────────
+# ── Conditions (UPDATED with Pregnancy Conditions) ────────────────────────────
 CONDITIONS = [
+    # Existing Conditions
     {
         'name': 'Common Cold',
         'severity': 'low',
@@ -105,9 +97,68 @@ CONDITIONS = [
         'when_to_see_doctor': 'Seek emergency care if throat swelling or difficulty breathing occurs.',
         'symptom_slugs': ['rash', 'shortness-of-breath', 'nausea', 'dizziness', 'eye-redness'],
     },
+    
+    # ========== NEW PREGNANCY CONDITIONS ==========
+    
+    {
+        'name': 'Pre-eclampsia',
+        'severity': 'emergency',
+        'description': 'A serious pregnancy complication characterized by high blood pressure and signs of organ damage. Can progress to eclampsia (seizures) if untreated.',
+        'when_to_see_doctor': 'CALL 999 IMMEDIATELY. This is a medical emergency. Go to hospital now.',
+        'symptom_slugs': ['headache', 'nausea', 'vomiting', 'dizziness', 'abdominal-pain'],
+    },
+    {
+        'name': 'Hyperemesis Gravidarum',
+        'severity': 'urgent',
+        'description': 'Severe, persistent nausea and vomiting during pregnancy that can lead to dehydration, weight loss, and electrolyte imbalance.',
+        'when_to_see_doctor': 'Contact your OB/GYN today. You may need IV fluids and anti-nausea medication.',
+        'symptom_slugs': ['nausea', 'vomiting', 'dizziness', 'fatigue', 'loss-of-appetite'],
+    },
+    {
+        'name': 'Urinary Tract Infection (UTI) in Pregnancy',
+        'severity': 'urgent',
+        'description': 'A bacterial infection in the urinary system. During pregnancy, UTIs can lead to kidney infections and preterm labor if untreated.',
+        'when_to_see_doctor': 'Contact your OB/GYN today for a urine test. Antibiotics are safe during pregnancy.',
+        'symptom_slugs': ['abdominal-pain', 'fever', 'nausea', 'fatigue'],
+    },
+    {
+        'name': 'Anemia in Pregnancy',
+        'severity': 'moderate',
+        'description': 'Iron deficiency during pregnancy. Common but can cause fatigue, weakness, and complications if severe.',
+        'when_to_see_doctor': 'Request a blood test at your next prenatal visit. Iron supplements may be needed.',
+        'symptom_slugs': ['fatigue', 'dizziness', 'headache', 'shortness-of-breath'],
+    },
+    {
+        'name': 'Gestational Diabetes',
+        'severity': 'moderate',
+        'description': 'High blood sugar that develops during pregnancy. Usually manageable with diet and monitoring.',
+        'when_to_see_doctor': 'Schedule glucose tolerance test. Monitor blood sugar as directed.',
+        'symptom_slugs': ['fatigue', 'nausea', 'frequent-urination', 'excessive-thirst'],
+    },
+    {
+        'name': 'Placenta Previa',
+        'severity': 'emergency',
+        'description': 'A condition where the placenta covers the cervix, causing painless bleeding in the third trimester.',
+        'when_to_see_doctor': 'CALL 999 IMMEDIATELY. Go to hospital now. Do NOT have a vaginal exam.',
+        'symptom_slugs': ['abdominal-pain', 'dizziness', 'fatigue'],
+    },
+    {
+        'name': 'Preterm Labor',
+        'severity': 'emergency',
+        'description': 'Regular contractions and cervical changes before 37 weeks of pregnancy.',
+        'when_to_see_doctor': 'CALL 999 IMMEDIATELY. Go to Labor & Delivery triage.',
+        'symptom_slugs': ['abdominal-pain', 'back-pain', 'pelvic-pressure'],
+    },
+    {
+        'name': 'Pneumonia in Pregnancy',
+        'severity': 'urgent',
+        'description': 'Lung infection that can be more severe during pregnancy due to immune system changes.',
+        'when_to_see_doctor': 'Seek medical care today. Pneumonia requires prompt treatment.',
+        'symptom_slugs': ['fever', 'cough', 'chest-pain', 'shortness-of-breath', 'fatigue', 'chills', 'sweating'],
+    },
 ]
 
-# ── Questions ─────────────────────────────────────────────────────────────────
+# ── Questions (UPDATED with Pregnancy Option) ─────────────────────────────────
 QUESTIONS = [
     {
         'text': 'Which of the following symptoms are you currently experiencing? (Select all that apply)',
@@ -135,7 +186,7 @@ QUESTIONS = [
     },
 ]
 
-# ── First Aid Guides ──────────────────────────────────────────────────────────
+# ── First Aid Guides (UPDATED with Pregnancy) ─────────────────────────────────
 FIRST_AID_GUIDES = [
     {
         'title': 'First Aid for Choking (Adult)',
@@ -171,6 +222,27 @@ FIRST_AID_GUIDES = [
         'severity': 'urgent',
         'steps': ['Do not move the person.', 'Immobilise the injured area.', 'Apply ice pack wrapped in cloth.', 'Seek medical attention.'],
         'warnings': 'Never try to straighten a broken bone.',
+    },
+    {
+        'title': 'Emergency Guide: Pre-eclampsia',
+        'category': 'pregnancy',
+        'severity': 'emergency',
+        'steps': ['CALL 999 IMMEDIATELY', 'Go to the nearest Emergency Room', 'Lie on your left side', 'Do not take any medication', 'Inform medical staff you are pregnant and symptoms started suddenly'],
+        'warnings': 'Pre-eclampsia can progress to seizures. DO NOT wait to see if symptoms improve.',
+    },
+    {
+        'title': 'Guide: Hyperemesis Gravidarum',
+        'category': 'pregnancy',
+        'severity': 'urgent',
+        'steps': ['Contact your OB/GYN today', 'Try small, frequent meals every 2 hours', 'Stay hydrated with small sips of water or electrolyte drinks', 'Avoid triggers (strong smells, fatty foods)', 'Monitor for dark urine (dehydration sign)'],
+        'warnings': 'If you cannot keep any fluids down for 12 hours, go to the hospital.',
+    },
+    {
+        'title': 'Guide: UTI in Pregnancy',
+        'category': 'pregnancy',
+        'severity': 'urgent',
+        'steps': ['Drink plenty of water (8-10 glasses daily)', 'Contact OB/GYN for urine test', 'Take prescribed antibiotics as directed', 'Avoid caffeine and sugary drinks', 'Urinate frequently, don\'t hold it'],
+        'warnings': 'Untreated UTI can lead to kidney infection and preterm labor.',
     },
 ]
 
