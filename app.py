@@ -159,15 +159,16 @@ def create_app():
         step      = int(request.args.get('step', 1))
 
         if request.method == 'POST':
-            for key, value in request.form.items():
-                save_answer(key, value)
+            # FIX: use getlist() to capture ALL checked checkboxes
+            for key in request.form.keys():
+                values = request.form.getlist(key)
+                save_answer(key, values if len(values) > 1 else values[0])
             set_current_step(step + 1)
 
             if step < total:
                 return redirect(url_for('symptom_form', step=step + 1))
             return redirect(url_for('results'))
 
-        # If no questions in DB, show error
         if not questions:
             flash('No symptom questions found. Please run seed.py to initialize the database.', 'warning')
             return render_template('symptom_form.html', question=None, step=1, total=0)
@@ -183,36 +184,29 @@ def create_app():
     @app.route('/results')
     def results():
         answers = get_answers()
-        
-        # Debug: print answers to console
+
         print(f"[DEBUG] Answers received: {answers}")
-        
-        # Get matching conditions
+
         conditions = match_symptoms(answers)
-        
-        # SPECIAL CHECK: Pre-eclampsia for pregnant women
+
+        # Special check for pre-eclampsia
         pre_eclampsia_result = check_pre_eclampsia(answers)
         if pre_eclampsia_result:
-            print("[DEBUG] Pre-eclampsia detected! Adding to top of results.")
-            # Insert at the beginning (highest priority)
+            print("[DEBUG] Pre-eclampsia detected!")
             conditions.insert(0, pre_eclampsia_result)
-        
-        # Add severity info to each condition
+
         for item in conditions:
             item['severity_info'] = get_severity_label(item['severity'])
-        
-        # Add drug warnings for top 3 conditions
+
         for item in conditions[:3]:
             try:
                 item['drug_warnings'] = get_drug_warnings(item['condition'].name)
             except Exception as e:
                 print(f"[DEBUG] Drug warning error: {e}")
                 item['drug_warnings'] = []
-        
-        # Check if any emergency conditions
+
         has_emergency = any(i['severity'] == 'emergency' for i in conditions)
-        
-        # Save to history if user is logged in
+
         if current_user.is_authenticated and conditions:
             results_data = [
                 {
@@ -229,11 +223,10 @@ def create_app():
             )
             db.session.add(history)
             db.session.commit()
-        
-        # If no conditions matched, show a helpful message
+
         if not conditions:
             flash('No conditions matched your symptoms. Try selecting more symptoms or consult a healthcare professional.', 'info')
-        
+
         return render_template(
             'results.html',
             conditions=conditions,
@@ -461,7 +454,7 @@ def create_app():
 # Create app instance for Render
 app = create_app()
 
-# Run only when executed directly (not on Render)
+# Run only when executed directly
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
