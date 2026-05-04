@@ -1,17 +1,13 @@
 services:
   - type: web
     name: medassist
-    runtime: python
-    buildCommand: |
-      pip install -r requirements.txt
-      python seed.py
-    startCommand: gunicorn app:app
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --bind 0.0.0.0:$PORT
     envVars:
       - key: SECRET_KEY
-        generateValue: true
+        value: medassist-render-secret-2026
       - key: DATABASE_URI
         value: sqlite:///medassist.db
       - key: FLASK_DEBUG
         value: 0
-      - key: PYTHON_VERSION
-        value: 3.9.0
