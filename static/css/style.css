@@ -895,3 +895,274 @@ footer .text-muted {
   background: var(--teal-dark);
   color: white;
 }
+/* Section Header */
+.section-header {
+  margin-bottom: 3rem;
+}
+
+.section-subtitle {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--teal);
+  background: var(--teal-light);
+  padding: 4px 12px;
+  border-radius: 30px;
+  margin-bottom: 1rem;
+}
+
+/* Enhanced Feature Cards */
+.feature-card-enhanced {
+  background: white;
+  border-radius: 24px;
+  padding: 1.8rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(26, 122, 122, 0.1);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+}
+
+.feature-card-enhanced:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+  border-color: var(--teal);
+}
+
+.feature-card-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  color: white;
+  font-weight: 600;
+}
+
+.feature-icon-lg {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--teal-light), #E6F4F4);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.feature-icon-lg i {
+  font-size: 2rem;
+  color: var(--teal);
+}
+
+.feature-card-enhanced:hover .feature-icon-lg {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+}
+
+.feature-card-enhanced:hover .feature-icon-lg i {
+  color: white;
+}
+
+.feature-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--teal);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  transition: gap 0.3s ease;
+}
+
+.feature-link:hover {
+  gap: 8px;
+  color: var(--teal-dark);
+}
+
+/* Pulse Animation */
+.pulse-icon {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(26, 122, 122, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 15px rgba(26, 122, 122, 0);
+  }
+}
+
+/* Horizontal Stat Cards */
+.stat-card-horizontal {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.stat-card-horizontal:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-icon-circle {
+  width: 50px;
+  height: 50px;
+  background: var(--teal-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-icon-circle i {
+  font-size: 1.5rem;
+  color: var(--teal);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--teal);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--gray-600);
+}
+
+/* Step Cards */
+.step-card {
+  text-align: center;
+  padding: 1rem;
+}
+
+.step-number-circle {
+  width: 40px;
+  height: 40px;
+  background: var(--teal);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0 auto 1rem;
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  box-shadow: var(--shadow-md);
+}
+
+.step-icon i {
+  font-size: 2rem;
+  color: var(--teal);
+}
+
+/* CTA Card */
+.cta-card {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  border-radius: 30px;
+  padding: 3rem 2rem;
+  color: white;
+}
+
+.cta-icon i {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.cta-card .btn-light {
+  background: white;
+  color: var(--teal);
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-card .btn-light:hover {
+  transform: translateY(-2px);
+  background: white;
+}
+
+/* Severity Legend Card */
+.severity-legend-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--gray-200);
+}
+
+.severity-badge-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 40px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.severity-badge-lg[data-severity="low"] {
+  background: #10B98120;
+  color: #10B981;
+  border: 1px solid #10B981;
+}
+
+.severity-badge-lg[data-severity="moderate"] {
+  background: #F59E0B20;
+  color: #F59E0B;
+  border: 1px solid #F59E0B;
+}
+
+.severity-badge-lg[data-severity="urgent"] {
+  background: #F9731620;
+  color: #F97316;
+  border: 1px solid #F97316;
+}
+
+.severity-badge-lg[data-severity="emergency"] {
+  background: #EF444420;
+  color: #EF4444;
+  border: 1px solid #EF4444;
+}
+
+/* Dark theme support */
+[data-theme="dark"] .feature-card-enhanced {
+  background: #2a2a3e;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .stat-card-horizontal {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .severity-legend-card {
+  background: #2a2a3e;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .step-icon {
+  background: #2a2a3e;
+}
