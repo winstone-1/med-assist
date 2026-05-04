@@ -1,114 +1,810 @@
-/* Dark Theme Styles */
+/* ============================================================
+   dark-theme.css — MedAssist Dark Theme (Complete Fix)
+   ============================================================ */
 
+/* ────────────────────────────────────────────────────────────
+   CSS VARIABLE OVERRIDES
+   ──────────────────────────────────────────────────────────── */
 [data-theme="dark"] {
   --teal: #2aa8a8;
-  --teal-dark: #1a7a7a;
+  --teal-dark: #1a8a8a;
   --teal-light: #1a3a3a;
+  --teal-hover: #25b8b8;
   --light-bg: #1a1a2e;
-  --gray-200: #2a2a3e;
+  --gray-100: #2a2a3e;
+  --gray-200: #3a3a4e;
+  --gray-600: #a0a0b0;
   --gray-800: #e0e0e0;
 }
 
+/* ────────────────────────────────────────────────────────────
+   BASE
+   ──────────────────────────────────────────────────────────── */
 [data-theme="dark"] body {
   background-color: #1a1a2e;
   color: #e0e0e0;
 }
 
-[data-theme="dark"] .card {
-  background-color: #2a2a3e;
-  border-color: #3a3a4e !important;
+/* ────────────────────────────────────────────────────────────
+   TYPOGRAPHY — ensure ALL text is readable
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] p,
+[data-theme="dark"] span,
+[data-theme="dark"] li,
+[data-theme="dark"] label,
+[data-theme="dark"] small,
+[data-theme="dark"] div {
+  color: inherit;
 }
 
-[data-theme="dark"] .bg-light {
-  background-color: #2a2a3e !important;
+[data-theme="dark"] h1,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] h4,
+[data-theme="dark"] h5,
+[data-theme="dark"] h6 {
+  color: #f0f0f0;
 }
 
 [data-theme="dark"] .text-muted {
-  color: #a0a0a0 !important;
+  color: #a0a0b8 !important;
 }
 
-[data-theme="dark"] .hero-section-modern {
-  background: linear-gradient(135deg, #1a3a3a, #1a1a2e);
+[data-theme="dark"] .text-dark {
+  color: #e0e0e0 !important;
 }
 
-[data-theme="dark"] .feature-card-modern {
-  background: #2a2a3e;
-  border-color: #3a3a4e;
+[data-theme="dark"] .fw-semibold,
+[data-theme="dark"] .fw-bold,
+[data-theme="dark"] strong {
+  color: #f0f0f0;
 }
 
-[data-theme="dark"] .testimonial-card {
-  background: #2a2a3e;
+[data-theme="dark"] .lead {
+  color: #c0c0d0;
 }
 
-[data-theme="dark"] .stat-card-modern {
-  background: #2a2a3e;
+[data-theme="dark"] .small,
+[data-theme="dark"] small {
+  color: #a0a0b8;
 }
 
-[data-theme="dark"] .cta-card {
-  background: linear-gradient(135deg, #2aa8a8, #1a7a7a);
+/* ────────────────────────────────────────────────────────────
+   CARDS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .card {
+  background-color: #2a2a3e !important;
+  border-color: #3a3a4e !important;
+  color: #e0e0e0;
 }
 
-[data-theme="dark"] .footer {
-  background: linear-gradient(135deg, #0d0d1a, #1a1a2e);
+[data-theme="dark"] .card-header {
+  background-color: #232336 !important;
+  border-bottom-color: #3a3a4e !important;
+  color: #f0f0f0;
 }
 
+[data-theme="dark"] .card-body {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .card-body p,
+[data-theme="dark"] .card-body span,
+[data-theme="dark"] .card-body small,
+[data-theme="dark"] .card-body strong {
+  color: inherit;
+}
+
+/* Card header with bg-teal keeps its own color — don't override */
+[data-theme="dark"] .card-header.bg-teal {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark)) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .card-header.bg-white {
+  background-color: #232336 !important;
+  color: #f0f0f0 !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   BACKGROUND UTILITIES
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .bg-light {
+  background-color: #2a2a3e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .bg-white {
+  background-color: #2a2a3e !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .bg-teal-light {
+  background-color: #1a2e2e !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   FORMS
+   ──────────────────────────────────────────────────────────── */
 [data-theme="dark"] .form-control,
 [data-theme="dark"] .form-select {
-  background-color: #2a2a3e;
+  background-color: #232336;
   border-color: #3a3a4e;
   color: #e0e0e0;
 }
 
-[data-theme="dark"] .form-control:focus {
-  background-color: #2a2a3e;
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus {
+  background-color: #232336;
+  border-color: var(--teal);
+  color: #e0e0e0;
+  box-shadow: 0 0 0 3px rgba(42, 168, 168, 0.2);
+}
+
+[data-theme="dark"] .form-control::placeholder {
+  color: #6a6a8a;
+}
+
+[data-theme="dark"] .form-label {
+  color: #d0d0e0;
+}
+
+[data-theme="dark"] .form-check-label {
+  color: #d0d0e0;
+}
+
+[data-theme="dark"] .form-check-input {
+  background-color: #232336;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .form-check-input:checked {
+  background-color: var(--teal);
+  border-color: var(--teal);
+}
+
+/* ────────────────────────────────────────────────────────────
+   ALERTS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .alert {
+  border: 1px solid transparent;
+}
+
+[data-theme="dark"] .alert-info {
+  background-color: #1a3232;
+  color: #5dd8d8;
+  border-color: #2a5050;
+}
+
+[data-theme="dark"] .alert-warning {
+  background-color: #2e2710;
+  color: #f5c842;
+  border-color: #4a3e10;
+}
+
+[data-theme="dark"] .alert-danger {
+  background-color: #2e1010;
+  color: #f87171;
+  border-color: #4a1a1a;
+}
+
+[data-theme="dark"] .alert-success {
+  background-color: #0f2e1e;
+  color: #34d399;
+  border-color: #1a4a30;
+}
+
+/* Alert text inside */
+[data-theme="dark"] .alert strong,
+[data-theme="dark"] .alert span,
+[data-theme="dark"] .alert p {
+  color: inherit;
+}
+
+/* ────────────────────────────────────────────────────────────
+   BUTTONS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .btn-outline-secondary {
+  color: #c0c0d8;
+  border-color: #5a5a7a;
+}
+
+[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: #3a3a4e;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-outline-teal {
+  color: var(--teal);
+  border-color: var(--teal);
+}
+
+[data-theme="dark"] .btn-outline-teal:hover {
+  background-color: var(--teal);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: #3a3a4e;
+  border-color: #4a4a5e;
   color: #e0e0e0;
 }
 
+[data-theme="dark"] .btn-close {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* ────────────────────────────────────────────────────────────
+   NAVBAR
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .navbar {
+  background: linear-gradient(135deg, #0d4040, #0a3030) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   DROPDOWNS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .dropdown-menu {
+  background-color: #2a2a3e;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .dropdown-item {
+  color: #d0d0e0;
+}
+
+[data-theme="dark"] .dropdown-item:hover {
+  background-color: #3a3a4e;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .dropdown-divider {
+  border-color: #3a3a4e;
+}
+
+/* ────────────────────────────────────────────────────────────
+   MODALS
+   ──────────────────────────────────────────────────────────── */
 [data-theme="dark"] .modal-content {
   background-color: #2a2a3e;
   color: #e0e0e0;
+  border-color: #3a3a4e;
 }
 
 [data-theme="dark"] .modal-header {
   border-bottom-color: #3a3a4e;
 }
 
+[data-theme="dark"] .modal-header .modal-title {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .modal-body {
+  color: #d0d0e0;
+}
+
+[data-theme="dark"] .modal-body p,
+[data-theme="dark"] .modal-body span,
+[data-theme="dark"] .modal-body small {
+  color: inherit;
+}
+
 [data-theme="dark"] .modal-footer {
   border-top-color: #3a3a4e;
 }
 
-[data-theme="dark"] .btn-close {
-  filter: invert(1);
+/* ────────────────────────────────────────────────────────────
+   BADGES
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .badge.bg-info {
+  background-color: #1a6060 !important;
+  color: #7ff0f0 !important;
 }
 
-[data-theme="dark"] .dropdown-menu {
-  background-color: #2a2a3e;
+[data-theme="dark"] .badge.bg-warning {
+  background-color: #3a3000 !important;
+  color: #fbbf24 !important;
 }
 
-[data-theme="dark"] .dropdown-item {
-  color: #e0e0e0;
+[data-theme="dark"] .badge.bg-danger {
+  background-color: #3a1010 !important;
+  color: #f87171 !important;
 }
 
-[data-theme="dark"] .dropdown-item:hover {
+[data-theme="dark"] .badge.bg-success {
+  background-color: #0a2e1a !important;
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .badge.bg-secondary {
+  background-color: #3a3a4e !important;
+  color: #d0d0e0 !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   PROGRESS BAR
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .progress {
   background-color: #3a3a4e;
 }
 
-[data-theme="dark"] .alert-info {
-  background-color: #1a3a3a;
-  color: #2aa8a8;
+/* ────────────────────────────────────────────────────────────
+   TABLE
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] table {
+  color: #e0e0e0;
 }
 
-[data-theme="dark"] .alert-warning {
-  background-color: #3a3a1a;
-  color: #f59e0b;
+[data-theme="dark"] .table {
+  color: #e0e0e0;
+  border-color: #3a3a4e;
 }
 
-[data-theme="dark"] .alert-danger {
-  background-color: #3a1a1a;
-  color: #ef4444;
+[data-theme="dark"] .table th {
+  color: #f0f0f0;
+  border-color: #3a3a4e;
 }
 
-[data-theme="dark"] .alert-success {
-  background-color: #1a3a2a;
-  color: #10b981;
+[data-theme="dark"] .table td {
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #232336;
+}
+
+/* ────────────────────────────────────────────────────────────
+   HR / DIVIDERS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] hr {
+  border-color: #3a3a4e;
+  opacity: 1;
+}
+
+/* ────────────────────────────────────────────────────────────
+   HERO SECTION
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .hero-section-modern {
+  background: linear-gradient(135deg, #0d2e2e, #1a1a2e);
+}
+
+[data-theme="dark"] .hero-section-modern h1,
+[data-theme="dark"] .hero-section-modern p {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .hero-badge .badge {
+  background-color: #1a3a3a !important;
+  color: var(--teal) !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   STAT CARDS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .stat-card {
+  background: linear-gradient(135deg, #1a5a5a, #0d3a3a) !important;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .stat-card .fs-1,
+[data-theme="dark"] .stat-card .small {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .stat-card-horizontal {
+  background: #2a2a3e;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .stat-number {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .stat-label {
+  color: #a0a0b8;
+}
+
+[data-theme="dark"] .stat-icon-circle {
+  background: #1a3a3a;
+  color: var(--teal);
+}
+
+/* ────────────────────────────────────────────────────────────
+   FEATURE CARDS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .feature-card-enhanced {
+  background: #2a2a3e;
+  border-color: #3a3a4e;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .feature-card-enhanced h5 {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .feature-card-enhanced p {
+  color: #a0a0b8;
+}
+
+[data-theme="dark"] .feature-icon-lg {
+  background: #1a3a3a;
+  color: var(--teal);
+}
+
+[data-theme="dark"] .feature-link {
+  color: var(--teal);
+}
+
+[data-theme="dark"] .feature-card-badge {
+  background: #1a3a3a;
+  color: var(--teal);
+}
+
+/* ────────────────────────────────────────────────────────────
+   HOW IT WORKS SECTION
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .how-it-works {
+  background-color: #161625 !important;
+}
+
+[data-theme="dark"] .step-card h5 {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .step-card p {
+  color: #a0a0b8;
+}
+
+[data-theme="dark"] .step-icon {
+  background: #2a2a3e;
+}
+
+[data-theme="dark"] .section-subtitle {
+  color: var(--teal);
+}
+
+[data-theme="dark"] .section-header h2 {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .section-header p {
+  color: #a0a0b8;
+}
+
+/* ────────────────────────────────────────────────────────────
+   CTA SECTION
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .cta-card {
+  background: linear-gradient(135deg, #1a5a5a, #0d3a3a);
+}
+
+[data-theme="dark"] .cta-card h3,
+[data-theme="dark"] .cta-card p {
+  color: #ffffff;
+}
+
+/* ────────────────────────────────────────────────────────────
+   SEVERITY LEGEND
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .severity-legend-card {
+  background: #2a2a3e;
+  border-color: #3a3a4e;
+}
+
+[data-theme="dark"] .severity-legend-card h6 {
+  color: #f0f0f0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   DISCLAIMER BANNER
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .disclaimer-banner {
+  background: linear-gradient(90deg, #2a2000, #1e1800);
+  color: #f5c842;
+  border-bottom-color: #6a5000;
+}
+
+[data-theme="dark"] .disclaimer-banner a {
+  color: #f5c842;
+}
+
+/* ────────────────────────────────────────────────────────────
+   HISTORY CARDS (dashboard)
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .history-card {
+  background: #2a2a3e !important;
+  border-left-color: var(--teal) !important;
+}
+
+[data-theme="dark"] .history-card .fw-semibold {
+  color: #d0d0e0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   RESULTS PAGE
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .card-header.bg-white.d-flex {
+  background-color: #232336 !important;
+}
+
+[data-theme="dark"] .card-header strong {
+  color: #f0f0f0;
+}
+
+/* drug warning boxes */
+[data-theme="dark"] .bg-light.rounded {
+  background-color: #232336 !important;
+  color: #d0d0e0 !important;
+}
+
+[data-theme="dark"] .bg-light.rounded strong {
+  color: #f0f0f0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   BMI CALCULATOR
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .bmi-scale-card,
+[data-theme="dark"] .card.border-0.bg-light {
+  background-color: #232336 !important;
+  color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .bmi-scale-card h6 {
+  color: #f0f0f0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   BP TRACKER
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .alert-info.small {
+  background-color: #1a2e2e;
+  color: #5dd8d8;
+  border-color: #2a5050;
+}
+
+[data-theme="dark"] .alert-info.small strong {
+  color: #7ff0f0;
+}
+
+[data-theme="dark"] .alert-info.small .text-danger {
+  color: #f87171 !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   JOURNAL PAGE
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .badge.bg-warning.text-dark {
+  color: #1a1a2e !important;
+  background-color: #f5c842 !important;
+}
+
+/* ────────────────────────────────────────────────────────────
+   WELLNESS PAGE
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .modal-body .badge.bg-teal {
+  background: var(--teal) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .card.border-0.bg-teal-light {
+  background-color: #1a2e2e !important;
+}
+
+[data-theme="dark"] .card.border-0.bg-teal-light p,
+[data-theme="dark"] .card.border-0.bg-teal-light .text-muted {
+  color: #a0c8c8 !important;
+}
+
+[data-theme="dark"] .fst-italic {
+  color: #d0d0e0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   FOOTER
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] footer {
+  background: linear-gradient(135deg, #0a0a1a, #111120);
+  color: #a0a0b8;
+}
+
+[data-theme="dark"] footer h6 {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] footer a {
+  color: #a0a0b8;
+}
+
+[data-theme="dark"] footer a:hover {
+  color: var(--teal);
+}
+
+[data-theme="dark"] footer p,
+[data-theme="dark"] footer span,
+[data-theme="dark"] footer small,
+[data-theme="dark"] footer div {
+  color: #a0a0b8;
+}
+
+/* ────────────────────────────────────────────────────────────
+   CHATBOT — FULL FIX
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .chatbot-container {
+  background: #2a2a3e;
+  border: 1px solid #3a3a4e;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Chatbot header */
+[data-theme="dark"] .chatbot-header {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: #ffffff;
+}
+
+[data-theme="dark"] .chatbot-header h6,
+[data-theme="dark"] .chatbot-header p,
+[data-theme="dark"] .chatbot-header span,
+[data-theme="dark"] .chatbot-header small {
+  color: #ffffff !important;
+}
+
+/* Chatbot messages area */
+[data-theme="dark"] .chatbot-messages {
+  background: #1a1a2e;
+}
+
+/* Bot message bubble */
+[data-theme="dark"] .message.bot .message-content {
+  background: #2e2e45;
+  color: #e0e0e0;
+  border: 1px solid #3a3a55;
+}
+
+[data-theme="dark"] .message.bot .message-content .message-text {
+  color: #e0e0e0;
+}
+
+/* User message bubble stays teal — already readable */
+[data-theme="dark"] .message.user .message-content {
+  background: var(--teal);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .message.user .message-content .message-text {
+  color: #ffffff;
+}
+
+/* Timestamps */
+[data-theme="dark"] .message.bot .message-time {
+  color: #7a7a9a;
+}
+
+[data-theme="dark"] .message.user .message-time {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Bot avatar */
+[data-theme="dark"] .message.bot .message-avatar {
+  background: #1a3a3a;
+}
+
+[data-theme="dark"] .message.bot .message-avatar i {
+  color: var(--teal);
+}
+
+/* Quick replies */
+[data-theme="dark"] .chatbot-quick-replies {
+  background: #232336;
+  border-top-color: #3a3a4e;
+}
+
+[data-theme="dark"] .quick-reply {
+  background: #3a3a55;
+  color: #c0e8e8;
+  border: 1px solid #4a4a65;
+}
+
+[data-theme="dark"] .quick-reply:hover {
+  background: var(--teal);
+  color: #ffffff;
+  border-color: var(--teal);
+}
+
+/* Input area */
+[data-theme="dark"] .chatbot-input {
+  background: #232336;
+  border-top-color: #3a3a4e;
+}
+
+[data-theme="dark"] .chatbot-input input {
+  background: #2e2e45;
+  border-color: #4a4a5e;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .chatbot-input input::placeholder {
+  color: #6a6a8a;
+}
+
+[data-theme="dark"] .chatbot-input input:focus {
+  background: #2e2e45;
+  border-color: var(--teal);
+  color: #e0e0e0;
+  outline: none;
+}
+
+[data-theme="dark"] .chatbot-input button {
+  background: var(--teal);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .chatbot-input button:hover {
+  background: var(--teal-dark);
+}
+
+/* Typing indicator */
+[data-theme="dark"] .typing-indicator {
+  background: #2e2e45;
+}
+
+[data-theme="dark"] .typing-indicator span {
+  background: #6a6a9a;
+}
+
+/* Chatbot toggle button */
+[data-theme="dark"] .chatbot-toggle {
+  background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+  color: #ffffff;
+}
+
+/* ────────────────────────────────────────────────────────────
+   TOAST NOTIFICATIONS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .toast {
+  background-color: #2a2a3e;
+  border-color: #3a3a4e;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .toast-body {
+  color: #e0e0e0;
+}
+
+/* ────────────────────────────────────────────────────────────
+   SYMPTOM FORM
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] .step-number {
+  background: var(--teal);
+  color: #ffffff;
+}
+
+/* ────────────────────────────────────────────────────────────
+   CODE BLOCKS
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] code {
+  background: #232336;
+  color: #7ff0f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ────────────────────────────────────────────────────────────
+   SCROLLBAR (optional polish)
+   ──────────────────────────────────────────────────────────── */
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #3a3a5e;
+  border-radius: 3px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--teal);
 }
