@@ -2,91 +2,113 @@
 {% block title %}Login — MedAssist{% endblock %}
 {% block content %}
 
-<div class="auth-card card shadow">
-  <div class="card-header text-center text-white">
-    <h4 class="mb-0 fw-bold">
-      <i class="fa-solid fa-right-to-bracket me-2"></i>Welcome Back
-    </h4>
-    <p class="mb-0 small opacity-75 mt-1">Sign in to your MedAssist account</p>
-  </div>
-  <div class="card-body p-4">
-    <form method="POST">
-      <div class="mb-3">
-        <label class="form-label fw-semibold small">Email Address</label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-end-0">
-            <i class="fa-solid fa-envelope text-muted"></i>
-          </span>
-          <input type="email" name="email" class="form-control border-start-0"
-                 placeholder="you@example.com" required>
+<div class="row justify-content-center">
+  <div class="col-md-6 col-lg-5">
+    <div class="card shadow-lg border-0" style="border-radius: 24px; overflow: hidden;">
+      
+      <!-- Header with gradient -->
+      <div class="text-center py-4" style="background: linear-gradient(135deg, #1A7A7A, #0D5F5F);">
+        <div class="mb-3">
+          <i class="fa-solid fa-heart-pulse fa-4x text-white opacity-75"></i>
         </div>
+        <h4 class="fw-bold text-white mb-0">Welcome Back</h4>
+        <p class="text-white-50 small mt-1">Sign in to continue to MedAssist</p>
       </div>
-      <div class="mb-4">
-        <label class="form-label fw-semibold small">Password</label>
-        <div class="input-group">
-          <span class="input-group-text bg-light border-end-0">
-            <i class="fa-solid fa-lock text-muted"></i>
-          </span>
-          <input type="password" name="password" class="form-control border-start-0"
-                 placeholder="••••••••" required>
-        </div>
-      </div>
-      <div class="mb-3 d-flex justify-content-between align-items-center">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="rememberMe">
-          <label class="form-check-label small" for="rememberMe">
-            Remember me
-          </label>
-        </div>
-        <a href="#" class="small text-teal text-decoration-none">Forgot password?</a>
-      </div>
-      <button type="submit" class="btn btn-teal w-100 py-2 fw-semibold">
-        <i class="fa-solid fa-right-to-bracket me-2"></i>Sign In
-      </button>
-    </form>
+      
+      <!-- Body -->
+      <div class="card-body p-4">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label fw-semibold small text-muted">Email Address</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fa-solid fa-envelope text-teal"></i>
+              </span>
+              <input type="email" name="email" class="form-control border-start-0" 
+                     placeholder="you@example.com" required>
+            </div>
+          </div>
+          
+          <div class="mb-3">
+            <label class="form-label fw-semibold small text-muted">Password</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fa-solid fa-lock text-teal"></i>
+              </span>
+              <input type="password" name="password" class="form-control border-start-0" 
+                     placeholder="••••••••" required>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="rememberMe">
+              <label class="form-check-label small" for="rememberMe">Remember me</label>
+            </div>
+            <a href="#" class="small text-teal text-decoration-none">Forgot password?</a>
+          </div>
+          
+          <button type="submit" class="btn btn-teal w-100 py-2 fw-semibold">
+            <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>Sign In
+          </button>
+        </form>
 
-    <div class="position-relative my-4">
-      <hr>
-      <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">OR</span>
+        <!-- Divider -->
+        <div class="position-relative my-4">
+          <hr>
+          <span class="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted small">OR</span>
+        </div>
+
+        <!-- Google Sign In Button -->
+        <button onclick="signInWithGoogle()" class="btn btn-outline-secondary w-100 py-2 mb-3" style="border-radius: 30px;">
+          <i class="fa-brands fa-google text-danger me-2"></i>Continue with Google
+        </button>
+
+        <!-- Demo Credentials Card -->
+        <div class="bg-light rounded-3 p-3 mb-3 border">
+          <div class="d-flex align-items-center gap-2 mb-2">
+            <i class="fa-solid fa-flask text-teal"></i>
+            <span class="fw-semibold small">Demo Credentials</span>
+            <span class="badge bg-teal ms-2">Presentation Only</span>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <code class="text-muted small">Email: demo@medassist.com</code>
+            </div>
+            <div class="col-6">
+              <code class="text-muted small">Password: demo123</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sign up link -->
+        <p class="text-center text-muted small mb-0">
+          Don't have an account?
+          <a href="{{ url_for('register') }}" class="text-teal fw-semibold text-decoration-none">Sign up free</a>
+        </p>
+      </div>
     </div>
-
-    <button onclick="signInWithGoogle()" class="btn btn-outline-danger w-100 py-2">
-      <i class="fa-brands fa-google me-2"></i>Continue with Google
-    </button>
-
-    <hr class="my-3">
-    <p class="text-center text-muted small mb-0">
-      Don't have an account?
-      <a href="{{ url_for('register') }}" class="text-teal fw-semibold text-decoration-none">Sign up free</a>
-    </p>
   </div>
 </div>
 
 <!-- Firebase Google Sign-In Script -->
-<script type="module">
-  // Import Firebase (if using module approach)
-  // Or use the global approach from base.html
-  
+<script>
   window.signInWithGoogle = function() {
-    // Check if Firebase is loaded
-    if (typeof firebase === 'undefined') {
-      console.error('Firebase not loaded');
-      alert('Google Sign-In is not available at the moment. Please use email login.');
+    if (typeof firebase === 'undefined' || firebaseConfig.apiKey === "YOUR_API_KEY") {
+      alert('Google Sign-In demo: Use email login instead.\n\nDemo Email: demo@medassist.com\nDemo Password: demo123');
       return;
     }
     
     const provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
-        // Send to backend to create/login user
         fetch('/google-login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: result.user.email,
             name: result.user.displayName,
-            google_id: result.user.uid,
-            photo_url: result.user.photoURL
+            google_id: result.user.uid
           })
         })
         .then(response => response.json())
@@ -104,5 +126,29 @@
       });
   };
 </script>
+
+<style>
+  .input-group-text {
+    background-color: #f8f9fa;
+    border-radius: 12px 0 0 12px;
+  }
+  
+  .form-control {
+    border-radius: 0 12px 12px 0;
+  }
+  
+  .form-control:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(26, 122, 122, 0.1);
+  }
+  
+  [data-theme="dark"] .bg-light {
+    background-color: #2a2a3e !important;
+  }
+  
+  [data-theme="dark"] .bg-white {
+    background-color: #2a2a3e !important;
+  }
+</style>
 
 {% endblock %}
