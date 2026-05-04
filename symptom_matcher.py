@@ -19,10 +19,27 @@ DURATION_WEIGHT = {
 
 
 USER_SEVERITY_WEIGHT = {
-    'Mild — I can manage daily activities':                    0.8,
-    'Moderate — I am struggling with some activities':         1.0,
-    'Severe — I cannot do daily activities':                   1.2,
-    'Critical — I need immediate help':                        1.5,
+    'Mild — I can manage daily activities':        0.8,
+    'Moderate — I am struggling with some activities': 1.0,
+    'Severe — I cannot do daily activities':       1.2,
+    'Critical — I need immediate help':            1.5,
+}
+
+
+# Pregnancy-specific symptom mapping
+PREGNANCY_SYMPTOM_MAP = {
+    'severe headache': 'headache',
+    'headache': 'headache',
+    'swelling': 'swelling',
+    'vision changes': 'vision-changes',
+    'blurred vision': 'vision-changes',
+    'spots in vision': 'vision-changes',
+    'decreased fetal movement': 'decreased-fetal-movement',
+    'nausea': 'nausea',
+    'vomiting': 'vomiting',
+    'dizziness': 'dizziness',
+    'fatigue': 'fatigue',
+    'abdominal pain': 'abdominal-pain',
 }
 
 
@@ -44,28 +61,51 @@ def parse_answers(answers: dict) -> dict:
         if isinstance(value, list):
             values = value
         elif isinstance(value, str):
-            values = [value]
+            # Check if it's a comma-separated string
+            if ',' in value:
+                values = [v.strip() for v in value.split(',')]
+            else:
+                values = [value]
         else:
             values = [str(value)]
 
-        # Q1 — symptoms checkbox
-        if key == 'q_1':
+        # Handle question keys (q_1, q_2, q_3, q_4, or dynamic IDs)
+        # Extract question number from key (e.g., 'q_1' -> 1, 'q_12' -> 12)
+        q_num = None
+        if key.startswith('q_'):
+            try:
+                q_num = int(key.split('_')[1])
+            except (IndexError, ValueError):
+                q_num = None
+
+        # Q1 — symptoms checkbox (or any checkbox with symptom names)
+        if q_num == 1 or key == 'q_1' or 'symptom' in str(values).lower():
             for v in values:
-                slug = v.strip().lower().replace(' ', '-')
-                symptom_slugs.add(slug)
+                v_clean = v.strip().lower().replace(' ', '-')
+                # Map pregnancy-specific terms
+                v_clean = PREGNANCY_SYMPTOM_MAP.get(v_clean, v_clean)
+                symptom_slugs.add(v_clean)
 
         # Q2 — duration radio
-        elif key == 'q_2':
-            duration = values[0].strip()
+        elif q_num == 2 or key == 'q_2' or 'long' in key.lower():
+            if values:
+                duration = values[0].strip()
 
         # Q3 — severity radio
-        elif key == 'q_3':
-            severity_level = values[0].strip()
+        elif q_num == 3 or key == 'q_3' or 'severe' in key.lower() or 'severity' in key.lower():
+            if values:
+                severity_level = values[0].strip()
 
         # Q4 — risk factors checkbox
-        elif key == 'q_4':
+        elif q_num == 4 or key == 'q_4' or 'risk' in key.lower() or 'high-risk' in key.lower():
             for v in values:
                 risk_factors.append(v.strip())
+
+        # Fallback for any other checkbox (assume it's symptoms)
+        elif 'checkbox' in str(key).lower() or 'option' in str(key).lower():
+            for v in values:
+                v_clean = v.strip().lower().replace(' ', '-')
+                symptom_slugs.add(v_clean)
 
     print(f"[DEBUG] Symptom slugs: {symptom_slugs}")
     print(f"[DEBUG] Duration: {duration}")
@@ -131,8 +171,18 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
         # Risk factor bonus
         risk_bonus = 0.0
         if risk_factors and 'None of the above' not in risk_factors:
-            if any('pregnant' in r.lower() for r in risk_factors):
+            # Check for pregnancy (regardless of exact phrasing)
+            is_pregnant = False
+            for rf in risk_factors:
+                if 'pregnant' in rf.lower():
+                    is_pregnant = True
+                    break
+            
+            if is_pregnant:
                 risk_bonus = 0.3
+                # Special boost for pre-eclampsia symptoms
+                if cond.name == 'Pre-eclampsia' and {'headache', 'vision-changes', 'swelling'} & symptom_slugs:
+                    risk_bonus += 0.2
             else:
                 risk_bonus = 0.1 * len(risk_factors)
 
@@ -155,7 +205,56 @@ def match_symptoms(answers: dict, threshold: float = 0.25) -> list:
     ))
 
     print(f"[DEBUG] Final results count: {len(results)}")
+    
+    # If no results, return empty list
     return results
+
+
+def check_pre_eclampsia(answers: dict) -> dict:
+    """
+    Special check for pre-eclampsia in pregnant women.
+    Returns emergency result if symptoms match.
+    """
+    parsed = parse_answers(answers)
+    symptom_slugs = parsed['symptom_slugs']
+    risk_factors = parsed['risk_factors']
+    
+    # Check if pregnant
+    is_pregnant = False
+    for rf in risk_factors:
+        if 'pregnant' in rf.lower():
+            is_pregnant = True
+            break
+    
+    if not is_pregnant:
+        return None
+    
+    # Pre-eclampsia key symptoms
+    pre_eclampsia_symptoms = {
+        'headache', 'vision-changes', 'swelling', 
+        'abdominal-pain', 'dizziness', 'nausea'
+    }
+    
+    has_key_symptoms = len(pre_eclampsia_symptoms & symptom_slugs) >= 2
+    has_severe_headache = 'headache' in symptom_slugs
+    
+    if is_pregnant and (has_key_symptoms or has_severe_headache):
+        # Try to find pre-eclampsia in database
+        pre_eclampsia = Condition.query.filter(
+            Condition.name.ilike('%pre-eclampsia%')
+        ).first()
+        
+        if pre_eclampsia:
+            matched = list(pre_eclampsia_symptoms & symptom_slugs)
+            return {
+                'condition': pre_eclampsia,
+                'base_score': 0.95,
+                'final_score': 1.5,
+                'matched': matched if matched else ['headache'],
+                'severity': 'emergency',
+                'guide': pre_eclampsia.firstaid_guide
+            }
+    return None
 
 
 def get_severity_label(severity: str) -> dict:
